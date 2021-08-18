@@ -39,8 +39,7 @@ const DICES = [
 type Dice = typeof DICES[number];
 type DiceValue = Dice["value"];
 
-const APP_WIDTH =
-  grid(0, 1) + grid(2) + grid(0, 1) + grid(3) * DICES.length + grid(0, 1);
+const DICE_SIZE = grid(4);
 
 type Item = { zone: Zone; value: DiceValue };
 
@@ -57,6 +56,10 @@ export function App() {
   const score = items.reduce((acc, item) => {
     return acc + item.value * item.zone;
   }, 0);
+
+  const multiline = false;
+
+  const APP_WIDTH = 700;
 
   const scale = APP_WIDTH > windowWidth ? windowWidth / APP_WIDTH : 1;
 
@@ -86,15 +89,13 @@ export function App() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",
-            paddingLeft: grid(3),
-            paddingRight: grid(0, 1),
           }}
         >
           <div
             style={{
               height: grid(2),
               lineHeight: grid(2) + "px",
-              fontSize: grid(1),
+              fontSize: grid(2),
             }}
           >
             {score} points ({items.length} dés)
@@ -106,8 +107,6 @@ export function App() {
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",
-            paddingLeft: grid(3),
-            paddingRight: grid(0, 1),
           }}
         >
           <button
@@ -115,11 +114,11 @@ export function App() {
               display: "flex",
               paddingTop: 0,
               paddingBottom: 0,
-              height: grid(2),
-              lineHeight: grid(2) + "px",
-              paddingLeft: grid(1),
-              paddingRight: grid(1),
-              fontSize: grid(1),
+              height: grid(3),
+              lineHeight: grid(3) + "px",
+              paddingLeft: grid(2),
+              paddingRight: grid(2),
+              fontSize: grid(2),
               border: "none",
               borderRadius: grid(0, 0, 1),
               background: Colors.red(700),
@@ -138,11 +137,11 @@ export function App() {
               display: "flex",
               paddingTop: 0,
               paddingBottom: 0,
-              height: grid(2),
-              lineHeight: grid(2) + "px",
-              paddingLeft: grid(1),
-              paddingRight: grid(1),
-              fontSize: grid(1),
+              height: grid(3),
+              lineHeight: grid(3) + "px",
+              paddingLeft: grid(2),
+              paddingRight: grid(2),
+              fontSize: grid(2),
               border: "none",
               borderRadius: grid(0, 0, 1),
               background: Colors.blue(700),
@@ -165,6 +164,7 @@ export function App() {
                 multiply={zone.multiply}
                 color={zone.color}
                 items={items}
+                multiline={multiline}
                 onDiceClick={(dice) => {
                   setItems((prev) => [
                     ...prev,
@@ -188,45 +188,57 @@ type ZoneProps = {
   multiply: Zone;
   items: Array<Item>;
   onDiceClick: (value: DiceValue) => void;
+  multiline: boolean;
 };
 
-function Zone({ color, multiply, items, onDiceClick }: ZoneProps) {
+function Zone({ color, multiply, items, onDiceClick, multiline }: ZoneProps) {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "row",
+        alignItems: "center",
         paddingLeft: grid(0, 1),
         paddingRight: grid(0, 1),
       }}
     >
       <div
         style={{
-          width: grid(2),
+          width: grid(3),
           textAlign: "right",
           lineHeight: grid(3) + "px",
-          fontSize: grid(1),
+          fontSize: grid(2),
+          color: Colors.grey(700),
         }}
       >
         ×{multiply}
       </div>
       <Spacer horizontal={grid(0, 1)} />
-      {DICES.map((dice, i) => {
-        const count = items.filter(
-          (v) => v.zone === multiply && v.value === dice.value
-        ).length;
-        return (
-          <Dice
-            dice={dice}
-            key={i}
-            color={color}
-            count={count}
-            onClick={() => {
-              onDiceClick(dice.value);
-            }}
-          />
-        );
-      })}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          width: DICE_SIZE * (multiline ? 3 : 6),
+        }}
+      >
+        {DICES.map((dice, i) => {
+          const count = items.filter(
+            (v) => v.zone === multiply && v.value === dice.value
+          ).length;
+          return (
+            <Dice
+              dice={dice}
+              key={i}
+              color={color}
+              count={count}
+              onClick={() => {
+                onDiceClick(dice.value);
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -250,9 +262,10 @@ function Dice({ dice, color, count, onClick }: DiceProps) {
         background: "none",
         cursor: "pointer",
         position: "relative",
+        display: "flex",
       }}
     >
-      <Icon size={grid(3)} color={color} weight="duotone" />
+      <Icon size={DICE_SIZE} color={color} weight="duotone" />
       {count > 0 && (
         <div
           style={{
