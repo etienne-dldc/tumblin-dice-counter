@@ -1,0 +1,10 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    "tw`([^`]*)" // tw`...`
+  ],
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
