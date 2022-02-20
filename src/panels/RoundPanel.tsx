@@ -1,8 +1,8 @@
 import { Panel } from "../libs/panels";
 import React from "react";
 import { PanelHeader } from "../components/PanelHeader";
-import { playerScore, resultScore, useStore } from "../store";
-import clsx from "clsx";
+import { playerScore, printScore, resultScore, useStore } from "../store";
+import { ListItem } from "../components/ListItem";
 
 type Props = {
   gameId: string;
@@ -52,19 +52,25 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
   }
 
   return (
-    <div className="flex flex-col items-stretch">
-      <PanelHeader title={`Tour n°${roundIndex + 1}`} />
-      <div className="flex flex-col items-stretch">
+    <div className="flex flex-col items-stretch space-y-4">
+      <PanelHeader title={`Tour n°${roundIndex + 1}`} color="green" />
+      <div className="flex flex-col items-stretch space-y-2">
         {players.map((player, index) => {
           const result = results[index] ?? [];
           return (
-            <button
+            <ListItem
+              color="green"
+              active={index === playerIndex}
               key={index}
               onClick={() => selectPlayer(index)}
-              className={clsx(index === playerIndex && "font-bold")}
+              className="items-center"
             >
-              {player.name} (+{resultScore(result)} points) Total: {playerScore(game, index, roundIndex)}
-            </button>
+              <span className="flex-1 text-left">{player.name}</span>
+              <div className="font-normal flex flex-col items-end text-xs space-y-1">
+                <span>{printScore(resultScore(result))}</span>
+                <span>Total: {playerScore(game, index, roundIndex)}</span>
+              </div>
+            </ListItem>
           );
         })}
       </div>

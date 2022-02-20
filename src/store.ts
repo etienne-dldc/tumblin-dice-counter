@@ -91,14 +91,33 @@ export type State = {
 type ValueFn<T> = (value: T) => void;
 type StateFn = (state: State) => void;
 
+export function resultSum(result: ZoneResult): number {
+  return result.reduce((sum, dice) => sum + dice, 0);
+}
+
 export function zoneScore(zone: Zone, result: ZoneResult): number {
-  const sum = result.reduce((sum, dice) => sum + dice, 0);
-  const score = sum * MULTIPLIER[zone];
+  const score = resultSum(result) * MULTIPLIER[zone];
   return score;
+}
+
+export const MULT_SYMBOL = "×";
+
+export function zoneName(zone: Zone): string {
+  return {
+    malus: MULT_SYMBOL + "-1",
+    x1: MULT_SYMBOL + "1",
+    x2: MULT_SYMBOL + "2",
+    x3: MULT_SYMBOL + "3",
+    x4: MULT_SYMBOL + "4",
+  }[zone];
 }
 
 export function resultScore(result: PlayerResult): number {
   return ZONES.reduce((sum, zone) => sum + zoneScore(zone, result[zone]), 0);
+}
+
+export function printScore(score: number): string {
+  return score > 0 ? "+" + score : score.toFixed(0);
 }
 
 export function playerScore(game: Game, playerIndex: number, lastRoundIndex: number | null): number {
