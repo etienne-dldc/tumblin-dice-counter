@@ -71,7 +71,7 @@ export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.
           className="flex-1"
           small
           onClick={() => {
-            const name = prompt("Nom du joueur", player.name);
+            const name = prompt("Nom du joueur:", player.name);
             if (name) {
               renamePlayer(playerIndex, name);
             }

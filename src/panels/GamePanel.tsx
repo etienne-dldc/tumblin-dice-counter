@@ -42,7 +42,7 @@ export function Content({ gameId, selected, onSelectPlayers, onSelectRound }: Pr
           color="green"
           className="flex-1"
           onClick={() => {
-            const res = window.prompt(`Entre game Name`, game.name);
+            const res = window.prompt(`Nom de la partie:`, game.name);
             if (res) {
               renameGame(res);
             }
