@@ -178,7 +178,6 @@ export const useStore = create<State>(
         set((state) => {
           const game: Game = { id: createGameId(), name: `Partie ${state.games.length + 1}`, players: [], rounds: [] };
           state.games.push(game);
-          state.selected = { gameId: game.id, selected: null };
         }),
       renameGame: (name) => set(selectedGame((game) => void (game.name = name))),
       removeGame: () => {
