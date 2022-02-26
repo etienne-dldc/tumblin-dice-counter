@@ -3,7 +3,7 @@ import React from "react";
 import { PanelHeader } from "../components/PanelHeader";
 import { useStore, Player } from "../store";
 import { Button } from "../components/Button";
-import { InlineButton } from "../components/InlineButton";
+import { Pencil, Trash } from "phosphor-react";
 
 type Props = {
   gameId: string;
@@ -63,13 +63,11 @@ export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.
   const removePlayer = useStore((state) => state.removePlayer);
 
   return (
-    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-400 rounded">
+    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border-2 border-teal-400 rounded">
       <span className="flex-1 text-lg pl-2">{player.name}</span>
-      <div className="flex flex-row items-center rounded overflow-hidden divide-x divide-gray-300 border border-gray-300">
-        <InlineButton
-          color="green"
-          className="flex-1"
-          small
+      <div className="flex flex-row items-center rounded overflow-hidden space-x-2">
+        <button
+          className="text-blue-500 rounded-md bg-blue-100 border-2 border-blue-200 p-1 hover:bg-blue-600 hover:text-white hover:border-blue-700"
           onClick={() => {
             const name = prompt("Nom du joueur:", player.name);
             if (name) {
@@ -77,27 +75,18 @@ export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.
             }
           }}
         >
-          Renommer
-        </InlineButton>
-        {/* <InlineButton
-          onClick={() => {
-            alert("TODO");
-          }}
-        >
-          Changer la couleur
-        </InlineButton> */}
-        <InlineButton
-          color="red"
-          className="flex-1"
-          small
+          <Pencil className="w-6 h-6 text-inherit" />
+        </button>
+        <button
+          className="text-red-500 rounded-md bg-red-100 border-2 border-red-200 p-1 hover:bg-red-600 hover:text-white hover:border-red-700"
           onClick={() => {
             if (confirm("Supprimer ce joueur ?")) {
               removePlayer(playerIndex);
             }
           }}
         >
-          Supprimer
-        </InlineButton>
+          <Trash className="w-6 h-6 text-inherit" />
+        </button>
       </div>
     </div>
   );
