@@ -25,9 +25,9 @@ export function Content({ selectedGame }: Props): JSX.Element | null {
   const nav = useLayoutInfosOrThrow();
 
   return (
-    <div className="flex flex-col items-stretch space-y-4">
+    <div className="flex flex-col items-stretch space-y-4 max-h-full">
       <PanelHeader title="Tumblin Dice" onHeaderClick={selectHome} />
-      <div className="flex flex-col items-stretch space-y-2">
+      <div className="flex flex-col items-stretch space-y-2 overflow-y-auto pb-4">
         {games.map((game) => (
           <ListItem
             key={game.id}
@@ -46,10 +46,10 @@ export function Content({ selectedGame }: Props): JSX.Element | null {
             <span className="text-lg">{game.name}</span>
           </ListItem>
         ))}
+        <Button onClick={addGame} className="self-center">
+          Nouvelle Partie
+        </Button>
       </div>
-      <Button onClick={addGame} className="self-center">
-        Nouvelle Partie
-      </Button>
     </div>
   );
 }

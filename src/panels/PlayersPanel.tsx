@@ -28,27 +28,29 @@ export function Content({ gameId }: Props): JSX.Element | null {
   const addPlayer = useStore((state) => state.addPlayer);
 
   return (
-    <div className="flex flex-col items-stretch space-y-4">
+    <div className="flex flex-col items-stretch space-y-4 max-h-full">
       <PanelHeader title="Joueurs" color="teal" />
-      <div className="space-y-2">
-        {players.length === 0 ? (
-          <p className="py-4 text-center bg-gray-100 rounded-md">Aucun joueurs</p>
-        ) : (
-          players.map((player, index) => <PlayerDetails key={index} player={player} playerIndex={index} />)
-        )}
+      <div className="flex flex-col items-stretch space-y-4 overflow-y-auto pb-4">
+        <div className="space-y-2">
+          {players.length === 0 ? (
+            <p className="py-4 text-center bg-gray-100 rounded-md">Aucun joueurs</p>
+          ) : (
+            players.map((player, index) => <PlayerDetails key={index} player={player} playerIndex={index} />)
+          )}
+        </div>
+        <Button
+          color="teal"
+          className="self-center"
+          onClick={() => {
+            const name = prompt("Nom du joueur");
+            if (name) {
+              addPlayer(name);
+            }
+          }}
+        >
+          Ajouter un joueur
+        </Button>
       </div>
-      <Button
-        color="teal"
-        className="self-center"
-        onClick={() => {
-          const name = prompt("Nom du joueur");
-          if (name) {
-            addPlayer(name);
-          }
-        }}
-      >
-        Ajouter un joueur
-      </Button>
     </div>
   );
 }

@@ -52,9 +52,9 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
   }
 
   return (
-    <div className="flex flex-col items-stretch space-y-4">
+    <div className="flex flex-col items-stretch space-y-4 max-h-full">
       <PanelHeader title={`Tour n°${roundIndex + 1}`} color="green" />
-      <div className="flex flex-col items-stretch space-y-2">
+      <div className="flex flex-col items-stretch space-y-2 overflow-y-auto">
         {players.map((player, index) => {
           const result = results[index] ?? [];
           return (
