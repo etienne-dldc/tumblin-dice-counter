@@ -8,27 +8,21 @@ import { PlayerPanel } from "./panels/PlayerPanel";
 import { PlayersPanel } from "./panels/PlayersPanel";
 import { RoundPanel } from "./panels/RoundPanel";
 import { WelcomePanel } from "./panels/WelcomePanel";
-import { ZonePanel } from "./panels/ZonePanel";
 import { useStore } from "./store";
 
 type MaybePanels = Array<Panel | null | MaybePanels>;
 
 export function App() {
   const selected = useStore((state) => state.selected);
-  const selectGame = useStore((state) => state.selectGame);
-  const selectPlayers = useStore((state) => state.selectPlayers);
-  const selectRound = useStore((state) => state.selectRound);
 
   const panels = useMemo((): Panels => {
     const panels: MaybePanels = [
-      GamesPanel({ selectedGame: selected === null ? null : selected.gameId, onSelectGame: selectGame }),
+      GamesPanel({ selectedGame: selected === null ? null : selected.gameId }),
       selected
         ? [
             GamePanel({
               gameId: selected.gameId,
               selected: selected.selected,
-              onSelectPlayers: selectPlayers,
-              onSelectRound: selectRound,
             }),
             mapMaybe(selected.selected, (gameInner): MaybePanels => {
               if (gameInner.type === "players") {
@@ -48,14 +42,6 @@ export function App() {
                       playerIndex: selectedPlayer.playerIndex,
                       selectedZone: selectedPlayer.selectedZone,
                     }),
-                    mapMaybe(selectedPlayer.selectedZone, (zone) => [
-                      ZonePanel({
-                        gameId: selected.gameId,
-                        roundIndex: gameInner.roundIndex,
-                        playerIndex: selectedPlayer.playerIndex,
-                        zone,
-                      }),
-                    ]),
                   ]),
                 ];
               }
@@ -65,7 +51,7 @@ export function App() {
         : [WelcomePanel({})],
     ];
     return (panels.flat(Infinity) as Array<Panel | null>).filter((panel): panel is Panel => panel !== null);
-  }, [selectGame, selectPlayers, selectRound, selected]);
+  }, [selected]);
 
   const options = useMemo(
     (): SolvePanelsOptions => ({

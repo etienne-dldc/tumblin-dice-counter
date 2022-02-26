@@ -77,7 +77,7 @@ export type State = {
   removePlayer: (playerIndex: number) => void;
   addRound: () => void;
   removeRound: () => void;
-  setZoneResult: (result: ZoneResult) => void;
+  setZoneResult: (zone: Zone, result: ZoneResult) => void;
   //
   selected: Selected;
   selectHome: () => void;
@@ -235,18 +235,14 @@ export const useStore = create<State>(
             state.selected.selected.roundIndex = game.rounds.length - 1;
           })
         ),
-      setZoneResult: (result) =>
+      setZoneResult: (zone, result) =>
         set(
           selectedRound((round, selected) => {
             if (!selected.selectedPlayer) {
               return;
             }
-            const zone = selected.selectedPlayer.selectedZone;
             const playerResult = round.results[selected.selectedPlayer.playerIndex];
             if (!playerResult) {
-              return;
-            }
-            if (!zone) {
               return;
             }
             playerResult[zone] = result;
@@ -284,7 +280,11 @@ export const useStore = create<State>(
         set((state) => {
           if (state.selected?.selected?.type === "round") {
             if (state.selected.selected.selectedPlayer) {
-              state.selected.selected.selectedPlayer.selectedZone = zone;
+              if (state.selected.selected.selectedPlayer.selectedZone === zone) {
+                state.selected.selected.selectedPlayer.selectedZone = null;
+              } else {
+                state.selected.selected.selectedPlayer.selectedZone = zone;
+              }
             }
           }
         }),

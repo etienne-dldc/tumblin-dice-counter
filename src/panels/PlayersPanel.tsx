@@ -12,7 +12,7 @@ type Props = {
 export function PlayersPanel(props: Props): Panel {
   return {
     key: `game/${props.gameId}/players`,
-    width: 300,
+    width: 400,
     content: <Content {...props} />,
   };
 }

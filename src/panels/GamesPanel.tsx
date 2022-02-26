@@ -7,7 +7,6 @@ import { Button } from "../components/Button";
 
 type Props = {
   selectedGame: null | string;
-  onSelectGame: (gameId: string) => void;
 };
 
 export function GamesPanel(props: Props): Panel {
@@ -18,10 +17,11 @@ export function GamesPanel(props: Props): Panel {
   };
 }
 
-export function Content({ selectedGame, onSelectGame }: Props): JSX.Element | null {
+export function Content({ selectedGame }: Props): JSX.Element | null {
   const games = useStore((state) => state.games);
   const addGame = useStore((state) => state.addGame);
   const selectHome = useStore((state) => state.selectHome);
+  const selectGame = useStore((state) => state.selectGame);
   const nav = useLayoutInfosOrThrow();
 
   return (
@@ -34,7 +34,7 @@ export function Content({ selectedGame, onSelectGame }: Props): JSX.Element | nu
             active={game.id === selectedGame}
             onClick={() => {
               if (game.id !== selectedGame) {
-                onSelectGame(game.id);
+                selectGame(game.id);
                 return;
               }
               if (nav.showChildren) {
