@@ -1,9 +1,10 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Panel, Panels, PanelsLayout } from "./libs/panels";
 import { SolvePanelsOptions } from "./libs/panels/Panels";
 import { mapMaybe } from "./logic/Utils";
 import { GamePanel } from "./panels/GamePanel";
 import { GamesPanel } from "./panels/GamesPanel";
+import { LeaderboardPanel } from "./panels/LeaderboardPanel";
 import { PlayerPanel } from "./panels/PlayerPanel";
 import { PlayersPanel } from "./panels/PlayersPanel";
 import { RoundPanel } from "./panels/RoundPanel";
@@ -27,6 +28,9 @@ export function App() {
             ...(mapMaybe(selected.selected, (gameInner): MaybePanels => {
               if (gameInner.type === "players") {
                 return [PlayersPanel({ gameId: selected.gameId })];
+              }
+              if (gameInner.type === "leaderboard") {
+                return [LeaderboardPanel({ gameId: selected.gameId })];
               }
               if (gameInner.type === "round") {
                 return [

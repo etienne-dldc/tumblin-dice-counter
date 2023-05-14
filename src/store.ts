@@ -1,8 +1,8 @@
 import { customAlphabet } from "nanoid";
 import { DiceFive, DiceFour, DiceOne, DiceSix, DiceThree, DiceTwo } from "phosphor-react";
 import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
 import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 const ALPHA_NUM = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -59,7 +59,7 @@ export type RoundSelected = {
   selectedPlayer: null | { playerIndex: number; selectedZone: null | Zone };
 };
 
-export type GameSelected = null | { type: "players" } | RoundSelected;
+export type GameSelected = null | { type: "players" } | { type: "leaderboard" } | RoundSelected;
 
 export type Selected = null | {
   gameId: string;
@@ -83,6 +83,7 @@ export type State = {
   selectHome: () => void;
   selectGame: (gameId: string) => void;
   selectPlayers: () => void;
+  selectLeaderboard: () => void;
   selectRound: (roundIndex: number) => void;
   selectPlayer: (playerIndex: number) => void;
   selectZone: (zone: Zone) => void;
@@ -268,6 +269,12 @@ export const useStore = create<State>()(
           set((state) => {
             if (state.selected) {
               state.selected.selected = { type: "players" };
+            }
+          }),
+        selectLeaderboard: () =>
+          set((state) => {
+            if (state.selected) {
+              state.selected.selected = { type: "leaderboard" };
             }
           }),
         selectRound: (roundIndex) =>
