@@ -21,7 +21,7 @@ import { Dice } from "../components/Dice";
 import clsx from "clsx";
 import { InlineButton } from "../components/InlineButton";
 import { tw } from "../logic/Utils";
-import { PlusCircle, Trash } from "phosphor-react";
+import { Plus, Trash } from "phosphor-react";
 import useOnclickOutside from "react-cool-onclickoutside";
 
 type Props = {
@@ -117,7 +117,7 @@ export function ZoneItem({ active, zone, result }: ZoneItemProps): JSX.Element |
         )}
       </div>
       {result.length === 0 ? (
-        <div className="flex items-center justify-center h-12 rounded-md bg-gray-100">
+        <div className="flex items-center justify-center h-12 rounded-md bg-gray-950/5">
           <p className="text-center">Aucun dés</p>
         </div>
       ) : (
@@ -192,23 +192,28 @@ export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element |
       <div>
         <div className="flex flex-row items-center justify-around flex-wrap">
           {DICES.map((dice) => (
-            <button key={dice.value} className="relative" onClick={() => setZoneResult(zone, [...result, dice.value])}>
+            <button
+              key={dice.value}
+              className="relative group ml-1"
+              onClick={() => setZoneResult(zone, [...result, dice.value])}
+            >
               <Dice
                 weight="duotone"
                 dice={dice}
                 className={clsx(
-                  "h-14 w-14 ml-2",
-                  zone === "malus" ? tw`text-red-500 hover:text-red-600` : tw`text-green-500 hover:text-green-600`
+                  "h-14 w-14",
+                  zone === "malus"
+                    ? tw`text-red-500 group-hover:text-red-600`
+                    : tw`text-green-500 group-hover:text-green-600`
                 )}
               />
-              <div>
-                <PlusCircle
-                  className={clsx(
-                    "w-5 h-5 absolute left-0 top-[50%] translate-y-[-50%]",
-                    zone === "malus" ? "text-red-700" : "text-green-700"
-                  )}
-                  weight="fill"
-                />
+              <div
+                className={clsx(
+                  "absolute top-1/2 -translate-y-1/2 -left-0.5 p-0.5 flex items-center justify-center rounded-full",
+                  zone === "malus" ? tw`bg-red-500 group-hover:bg-red-600` : tw`bg-green-500 group-hover:bg-green-600`
+                )}
+              >
+                <Plus className={clsx("w-4 h-4 text-white")} weight="bold" />
               </div>
             </button>
           ))}

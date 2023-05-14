@@ -1,8 +1,8 @@
-import produce, { Draft } from "immer";
-import create, { GetState, SetState, StateCreator, StoreApi } from "zustand";
-import { persist } from "zustand/middleware";
 import { customAlphabet } from "nanoid";
-import { DiceOne, DiceTwo, DiceThree, DiceFour, DiceFive, DiceSix } from "phosphor-react";
+import { DiceFive, DiceFour, DiceOne, DiceSix, DiceThree, DiceTwo } from "phosphor-react";
+import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
+import { persist } from "zustand/middleware";
 
 const ALPHA_NUM = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -22,13 +22,13 @@ export const DICES = [
   { value: 6, icon: DiceSix },
 ] as const;
 
-export type Dice = typeof DICES[number];
+export type Dice = (typeof DICES)[number];
 
 export type DiceValue = Dice["value"];
 
 export const ZONES = ["malus", "x1", "x2", "x3", "x4"] as const;
 
-export type Zone = typeof ZONES[number];
+export type Zone = (typeof ZONES)[number];
 
 export const MULTIPLIER: Record<Zone, number> = {
   malus: -1,
@@ -170,149 +170,132 @@ function selectedRound(ifRound: (round: Round, selected: RoundSelected, state: S
   });
 }
 
-export const useStore = create<State>(
-  persist(
-    withImmer((set, get) => ({
-      games: [],
-      addGame: () =>
-        set((state) => {
-          const game: Game = { id: createGameId(), name: `Partie ${state.games.length + 1}`, players: [], rounds: [] };
-          state.games.push(game);
-        }),
-      renameGame: (name) => set(selectedGame((game) => void (game.name = name))),
-      removeGame: () => {
-        const gameId = get().selected?.gameId;
-        if (!gameId) {
-          return;
-        }
-        set((state) => {
-          const gameIndex = state.games.findIndex((g) => g.id === gameId);
-          if (gameIndex >= 0) {
-            state.games.splice(gameIndex, 1);
-            state.selected = null;
+export const useStore = create<State>()(
+  immer(
+    persist(
+      (set, get) => ({
+        games: [],
+        addGame: () =>
+          set((state) => {
+            const game: Game = {
+              id: createGameId(),
+              name: `Partie ${state.games.length + 1}`,
+              players: [],
+              rounds: [],
+            };
+            state.games.push(game);
+          }),
+        renameGame: (name) => set(selectedGame((game) => void (game.name = name))),
+        removeGame: () => {
+          const gameId = get().selected?.gameId;
+          if (!gameId) {
+            return;
           }
-        });
-      },
-      addPlayer: (name) =>
-        set(
-          selectedGame((game) => {
-            const nameResolved = name ?? `Player ${game.players.length + 1}`;
-            const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-            game.players.push({ name: nameResolved, color });
-            game.rounds.forEach((round) => {
-              round.results.push({ malus: [], x1: [], x2: [], x3: [], x4: [] });
-            });
-          })
-        ),
-      renamePlayer: (playerIndex, name) => set(findPlayer(playerIndex, (player) => void (player.name = name))),
-      setPlayerColor: (playerIndex, color) => set(findPlayer(playerIndex, (player) => void (player.color = color))),
-      removePlayer: (playerIndex) =>
-        set(
-          selectedGame((game) => {
-            game.players.splice(playerIndex, 1);
-            game.rounds.forEach((round) => {
-              round.results.splice(playerIndex, 1);
-            });
-          })
-        ),
-      addRound: () =>
-        set(
-          selectedGame((game, state) => {
-            game.rounds.push({ results: game.players.map(() => ({ malus: [], x1: [], x2: [], x3: [], x4: [] })) });
-            if (state.selected) {
-              state.selected.selected = { type: "round", roundIndex: game.rounds.length - 1, selectedPlayer: null };
+          set((state) => {
+            const gameIndex = state.games.findIndex((g) => g.id === gameId);
+            if (gameIndex >= 0) {
+              state.games.splice(gameIndex, 1);
+              state.selected = null;
             }
-          })
-        ),
-      removeRound: () =>
-        set(
-          selectedGame((game, state) => {
-            if (state.selected?.selected?.type !== "round") {
-              return;
-            }
-            const roundIndex = state.selected.selected.roundIndex;
-            game.rounds.splice(roundIndex, 1);
-            state.selected.selected.roundIndex = game.rounds.length - 1;
-          })
-        ),
-      setZoneResult: (zone, result) =>
-        set(
-          selectedRound((round, selected) => {
-            if (!selected.selectedPlayer) {
-              return;
-            }
-            const playerResult = round.results[selected.selectedPlayer.playerIndex];
-            if (!playerResult) {
-              return;
-            }
-            playerResult[zone] = result;
-          })
-        ),
+          });
+        },
+        addPlayer: (name) =>
+          set(
+            selectedGame((game) => {
+              const nameResolved = name ?? `Player ${game.players.length + 1}`;
+              const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+              game.players.push({ name: nameResolved, color });
+              game.rounds.forEach((round) => {
+                round.results.push({ malus: [], x1: [], x2: [], x3: [], x4: [] });
+              });
+            })
+          ),
+        renamePlayer: (playerIndex, name) => set(findPlayer(playerIndex, (player) => void (player.name = name))),
+        setPlayerColor: (playerIndex, color) => set(findPlayer(playerIndex, (player) => void (player.color = color))),
+        removePlayer: (playerIndex) =>
+          set(
+            selectedGame((game) => {
+              game.players.splice(playerIndex, 1);
+              game.rounds.forEach((round) => {
+                round.results.splice(playerIndex, 1);
+              });
+            })
+          ),
+        addRound: () =>
+          set(
+            selectedGame((game, state) => {
+              game.rounds.push({ results: game.players.map(() => ({ malus: [], x1: [], x2: [], x3: [], x4: [] })) });
+              if (state.selected) {
+                state.selected.selected = { type: "round", roundIndex: game.rounds.length - 1, selectedPlayer: null };
+              }
+            })
+          ),
+        removeRound: () =>
+          set(
+            selectedGame((game, state) => {
+              if (state.selected?.selected?.type !== "round") {
+                return;
+              }
+              const roundIndex = state.selected.selected.roundIndex;
+              game.rounds.splice(roundIndex, 1);
+              state.selected.selected.roundIndex = game.rounds.length - 1;
+            })
+          ),
+        setZoneResult: (zone, result) =>
+          set(
+            selectedRound((round, selected) => {
+              if (!selected.selectedPlayer) {
+                return;
+              }
+              const playerResult = round.results[selected.selectedPlayer.playerIndex];
+              if (!playerResult) {
+                return;
+              }
+              playerResult[zone] = result;
+            })
+          ),
 
-      selected: null,
-      selectHome: () =>
-        set((state) => {
-          state.selected = null;
-        }),
-      selectGame: (gameId) =>
-        set((state) => {
-          state.selected = { gameId, selected: null };
-        }),
-      selectPlayers: () =>
-        set((state) => {
-          if (state.selected) {
-            state.selected.selected = { type: "players" };
-          }
-        }),
-      selectRound: (roundIndex) =>
-        set((state) => {
-          if (state.selected) {
-            state.selected.selected = { type: "round", roundIndex, selectedPlayer: null };
-          }
-        }),
-      selectPlayer: (playerIndex) =>
-        set((state) => {
-          if (state.selected?.selected?.type === "round") {
-            state.selected.selected.selectedPlayer = { playerIndex, selectedZone: null };
-          }
-        }),
-      selectZone: (zone) =>
-        set((state) => {
-          if (state.selected?.selected?.type === "round") {
-            if (state.selected.selected.selectedPlayer) {
-              if (state.selected.selected.selectedPlayer.selectedZone === zone) {
-                state.selected.selected.selectedPlayer.selectedZone = null;
-              } else {
-                state.selected.selected.selectedPlayer.selectedZone = zone;
+        selected: null,
+        selectHome: () =>
+          set((state) => {
+            state.selected = null;
+          }),
+        selectGame: (gameId) =>
+          set((state) => {
+            state.selected = { gameId, selected: null };
+          }),
+        selectPlayers: () =>
+          set((state) => {
+            if (state.selected) {
+              state.selected.selected = { type: "players" };
+            }
+          }),
+        selectRound: (roundIndex) =>
+          set((state) => {
+            if (state.selected) {
+              state.selected.selected = { type: "round", roundIndex, selectedPlayer: null };
+            }
+          }),
+        selectPlayer: (playerIndex) =>
+          set((state) => {
+            if (state.selected?.selected?.type === "round") {
+              state.selected.selected.selectedPlayer = { playerIndex, selectedZone: null };
+            }
+          }),
+        selectZone: (zone) =>
+          set((state) => {
+            if (state.selected?.selected?.type === "round") {
+              if (state.selected.selected.selectedPlayer) {
+                if (state.selected.selected.selectedPlayer.selectedZone === zone) {
+                  state.selected.selected.selectedPlayer.selectedZone = null;
+                } else {
+                  state.selected.selected.selectedPlayer.selectedZone = zone;
+                }
               }
             }
-          }
-        }),
-    })),
-    { name: "TUMBLIN_DICE_V1" }
+          }),
+      }),
+      { name: "TUMBLIN_DICE_V1" }
+    )
   )
 );
-
-function withImmer<
-  T extends State,
-  CustomSetState extends SetState<T>,
-  CustomGetState extends GetState<T>,
-  CustomStoreApi extends StoreApi<T>
->(
-  config: StateCreator<
-    T,
-    (partial: ((draft: Draft<T>) => void) | T, replace?: boolean) => void,
-    CustomGetState,
-    CustomStoreApi
-  >
-): StateCreator<T, CustomSetState, CustomGetState, CustomStoreApi> {
-  return (set, get, api) =>
-    config(
-      (partial, replace) => {
-        const nextState = typeof partial === "function" ? produce(partial as (state: Draft<T>) => T) : (partial as T);
-        return set(nextState, replace);
-      },
-      get,
-      api
-    );
-}

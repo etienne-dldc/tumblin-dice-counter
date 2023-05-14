@@ -10,7 +10,7 @@ import { RoundPanel } from "./panels/RoundPanel";
 import { WelcomePanel } from "./panels/WelcomePanel";
 import { useStore } from "./store";
 
-type MaybePanels = Array<Panel | null | MaybePanels>;
+type MaybePanels = Array<Panel | null>;
 
 export function App() {
   const selected = useStore((state) => state.selected);
@@ -18,13 +18,13 @@ export function App() {
   const panels = useMemo((): Panels => {
     const panels: MaybePanels = [
       GamesPanel({ selectedGame: selected === null ? null : selected.gameId }),
-      selected
+      ...(selected
         ? [
             GamePanel({
               gameId: selected.gameId,
               selected: selected.selected,
             }),
-            mapMaybe(selected.selected, (gameInner): MaybePanels => {
+            ...(mapMaybe(selected.selected, (gameInner): MaybePanels => {
               if (gameInner.type === "players") {
                 return [PlayersPanel({ gameId: selected.gameId })];
               }
@@ -35,20 +35,20 @@ export function App() {
                     roundIndex: gameInner.roundIndex,
                     playerIndex: gameInner.selectedPlayer?.playerIndex ?? null,
                   }),
-                  mapMaybe(gameInner.selectedPlayer, (selectedPlayer) => [
+                  ...(mapMaybe(gameInner.selectedPlayer, (selectedPlayer) => [
                     PlayerPanel({
                       gameId: selected.gameId,
                       roundIndex: gameInner.roundIndex,
                       playerIndex: selectedPlayer.playerIndex,
                       selectedZone: selectedPlayer.selectedZone,
                     }),
-                  ]),
+                  ]) ?? []),
                 ];
               }
               throw new Error("Unknown selected type");
-            }),
+            }) ?? []),
           ]
-        : [WelcomePanel({})],
+        : [WelcomePanel({})]),
     ];
     return (panels.flat(Infinity) as Array<Panel | null>).filter((panel): panel is Panel => panel !== null);
   }, [selected]);
