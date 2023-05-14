@@ -1,8 +1,8 @@
-import { Panel } from "../libs/panels";
-import React from "react";
-import { PanelHeader } from "../components/PanelHeader";
-import { playerScore, printScore, resultScore, useStore } from "../store";
+import { useMemo } from "react";
 import { ListItem } from "../components/ListItem";
+import { PanelHeader } from "../components/PanelHeader";
+import { Panel } from "../libs/panels";
+import { playerScore, printScore, resultScore, useStore } from "../store";
 
 type Props = {
   gameId: string;
@@ -45,6 +45,10 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
     return game;
   });
 
+  const firstPlayer = useMemo(() => {
+    return players[roundIndex % players.length];
+  }, [players, roundIndex]);
+
   const selectPlayer = useStore((state) => state.selectPlayer);
 
   if (game === null) {
@@ -55,6 +59,9 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
     <div className="flex flex-col items-stretch space-y-4 max-h-full">
       <PanelHeader title={`Tour n°${roundIndex + 1}`} color="green" />
       <div className="flex flex-col items-stretch space-y-2 overflow-y-auto">
+        <h3 className="text-sm uppercase tracking-wide px-1">
+          Premier joueur: <span className="font-bold">{firstPlayer.name}</span>
+        </h3>
         {players.map((player, index) => {
           const result = results[index] ?? [];
           return (

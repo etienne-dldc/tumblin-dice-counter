@@ -1,9 +1,9 @@
-import { Panel } from "../libs/panels";
-import React from "react";
-import { PanelHeader } from "../components/PanelHeader";
-import { useStore, Player } from "../store";
+import { Pencil, Plus, Trash } from "phosphor-react";
+import { Fragment, useMemo } from "react";
 import { Button } from "../components/Button";
-import { Pencil, Trash } from "phosphor-react";
+import { PanelHeader } from "../components/PanelHeader";
+import { Panel } from "../libs/panels";
+import { Player, useStore } from "../store";
 
 type Props = {
   gameId: string;
@@ -26,6 +26,20 @@ export function Content({ gameId }: Props): JSX.Element | null {
     return game.players;
   });
   const addPlayer = useStore((state) => state.addPlayer);
+
+  const games = useStore((state) => state.games);
+
+  const otherPlayers = useMemo(() => {
+    const result: string[] = [];
+    for (const game of games) {
+      for (const player of game.players) {
+        if (!result.includes(player.name) && !players.find((p) => p.name === player.name)) {
+          result.push(player.name);
+        }
+      }
+    }
+    return result;
+  }, [games, players]);
 
   return (
     <div className="flex flex-col items-stretch space-y-4 max-h-full">
@@ -50,6 +64,21 @@ export function Content({ gameId }: Props): JSX.Element | null {
         >
           Ajouter un joueur
         </Button>
+        {otherPlayers.length > 0 && (
+          <Fragment>
+            <h3 className="text-sm uppercase tracking-wide font-semibold px-1">Joueurs des parties précédantes</h3>
+            {otherPlayers.map((playerName, index) => (
+              <div
+                key={index}
+                className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border-2 border-teal-200 rounded cursor-pointer"
+                onClick={() => addPlayer(playerName)}
+              >
+                <Plus className="w-5 h-5 text-teal-600" weight="bold" />
+                <span className="flex-1 text-base pl-2">{playerName}</span>
+              </div>
+            ))}
+          </Fragment>
+        )}
       </div>
     </div>
   );
