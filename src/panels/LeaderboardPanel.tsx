@@ -66,72 +66,76 @@ function Content({ gameId }: Props) {
   }, [game]);
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 max-h-full">
+    <div className="flex flex-col items-stretch gap-4 max-h-full">
       <PanelHeader title="Classement" color="red" />
-      <div className="flex flex-col items-stretch space-y-4 overflow-y-auto pb-4">
+      <div className="flex flex-col items-stretch gap-4 overflow-y-auto pb-4">
         <Chart data={chartData} selected={selected} />
-        {leaderboard.map(({ player, score, playerIndex }, index) => {
-          const isSelected = playerIndex === selected;
-          const positionStylesMap = {
-            // first place
-            first: {
-              base: tw`border-yellow-500 bg-yellow-50`,
-              selected: tw`border-yellow-500 bg-yellow-200`,
-              unselected: tw`border-yellow-500 bg-yellow-50 opacity-50`,
-            },
-            // second place
-            second: {
-              base: tw`border-gray-500 bg-gray-100`,
-              selected: tw`border-gray-500 bg-gray-300`,
-              unselected: tw`border-gray-500 bg-gray-100 opacity-50`,
-            },
-            // third place
-            third: {
-              base: tw`border-orange-900 bg-orange-50`,
-              selected: tw`border-orange-900 bg-orange-300`,
-              unselected: tw`border-orange-900 bg-orange-50 opacity-50`,
-            },
-            rest: {
-              base: tw`border-slate-200`,
-              selected: tw`bg-slate-200 border-slate-400`,
-              unselected: tw`opacity-50`,
-            },
-          };
+        <div className="flex flex-col items-stretch gap-2">
+          {leaderboard.map(({ player, score, playerIndex }, index) => {
+            const isSelected = playerIndex === selected;
+            const positionStylesMap = {
+              // first place
+              first: {
+                base: tw`border-yellow-500 bg-yellow-50`,
+                selected: tw`border-yellow-500 bg-yellow-200`,
+                unselected: tw`border-yellow-500 bg-yellow-50 opacity-50`,
+              },
+              // second place
+              second: {
+                base: tw`border-gray-500 bg-gray-100`,
+                selected: tw`border-gray-500 bg-gray-300`,
+                unselected: tw`border-gray-500 bg-gray-100 opacity-50`,
+              },
+              // third place
+              third: {
+                base: tw`border-orange-900 bg-orange-50`,
+                selected: tw`border-orange-900 bg-orange-300`,
+                unselected: tw`border-orange-900 bg-orange-50 opacity-50`,
+              },
+              rest: {
+                base: tw`border-slate-300 bg-slate-50`,
+                selected: tw`bg-slate-200 border-slate-400`,
+                unselected: tw`opacity-50`,
+              },
+            };
 
-          const positionStyles =
-            [positionStylesMap.first, positionStylesMap.second, positionStylesMap.third][index] ??
-            positionStylesMap.rest;
+            const positionStyles =
+              [positionStylesMap.first, positionStylesMap.second, positionStylesMap.third][index] ??
+              positionStylesMap.rest;
 
-          return (
-            <div
-              key={index}
-              className={clsx(
-                "flex items-center gap-2 px-4 py-2 rounded-md border-2",
-                isSelected
-                  ? positionStyles.selected
-                  : selected === null
-                  ? positionStyles.base
-                  : positionStyles.unselected
-              )}
-              onClick={() => setSelected((p) => (p === playerIndex ? null : playerIndex))}
-            >
-              <span className="text-xl font-bold w-10">{score}</span>
-              <span className="text-xl">{player.name}</span>
-              <div className="flex-1" />
-              <div className="w-12 h-12 flex items-center justify-center">
-                {index === 0 ? (
-                  <Trophy className="w-full h-full text-yellow-500" weight="duotone" />
-                ) : index === 1 ? (
-                  <Trophy className="w-full h-full text-gray-500" weight="duotone" />
-                ) : index === 2 ? (
-                  <Trophy className="w-full h-full text-orange-900" weight="duotone" />
-                ) : (
-                  <div className="text-2xl font-mono text-gray-500">{index + 1}</div>
+            return (
+              <div
+                key={index}
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2 rounded-md border",
+                  isSelected
+                    ? positionStyles.selected
+                    : selected === null
+                    ? positionStyles.base
+                    : positionStyles.unselected
                 )}
+                onClick={() => setSelected((p) => (p === playerIndex ? null : playerIndex))}
+              >
+                <span className="text-xl font-bold w-10">{score}</span>
+                <span className="text-xl">{player.name}</span>
+                <div className="flex-1" />
+                <div className="w-8 h-8 flex items-center justify-center">
+                  {index === 0 ? (
+                    <Trophy className="w-full h-full text-yellow-500" weight="duotone" />
+                  ) : index === 1 ? (
+                    <Trophy className="w-full h-full text-gray-500" weight="duotone" />
+                  ) : index === 2 ? (
+                    <Trophy className="w-full h-full text-orange-900" weight="duotone" />
+                  ) : (
+                    <div className="w-full h-full rounded-full border-[3px] border-gray-300 bg-gray-50 flex items-center justify-center">
+                      <span className="text-xl font-mono text-gray-500">{index + 1}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

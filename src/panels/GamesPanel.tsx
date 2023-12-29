@@ -1,9 +1,8 @@
-import { Panel, useLayoutInfosOrThrow } from "../libs/panels";
-import React from "react";
-import { PanelHeader } from "../components/PanelHeader";
-import { useStore } from "../store";
-import { ListItem } from "../components/ListItem";
 import { Button } from "../components/Button";
+import { ListItem } from "../components/ListItem";
+import { PanelHeader } from "../components/PanelHeader";
+import { Panel, useLayoutInfosOrThrow } from "../libs/panels";
+import { useStore } from "../store";
 
 type Props = {
   selectedGame: null | string;
@@ -25,9 +24,9 @@ export function Content({ selectedGame }: Props): JSX.Element | null {
   const nav = useLayoutInfosOrThrow();
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 max-h-full">
+    <div className="flex flex-col items-stretch gap-4 max-h-full">
       <PanelHeader title="Tumblin Dice" onHeaderClick={selectHome} />
-      <div className="flex flex-col items-stretch space-y-2 overflow-y-auto pb-4">
+      <div className="flex flex-col items-stretch gap-2 overflow-y-auto pb-4">
         {games.map((game) => (
           <ListItem
             key={game.id}

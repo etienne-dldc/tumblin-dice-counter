@@ -23,8 +23,8 @@ export function Chart({ data, selected }: ChartProps) {
   }, [data]);
 
   return (
-    <div className="aspect-[1000/500]">
-      <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="bg-slate-100 rounded">
+    <div className="aspect-[1000/500] bg-slate-100 rounded-md border border-slate-300">
+      <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
         <g transform={`translate(${PADDING}, ${PADDING})`}>
           {/* Graph */}
           <g transform={`translate(${LEGEND_WIDTH + GAP}, 0)`}>

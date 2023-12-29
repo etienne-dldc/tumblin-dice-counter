@@ -56,9 +56,9 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
   }
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 max-h-full">
+    <div className="flex flex-col items-stretch gap-4 max-h-full">
       <PanelHeader title={`Tour n°${roundIndex + 1}`} color="green" />
-      <div className="flex flex-col items-stretch space-y-2 overflow-y-auto">
+      <div className="flex flex-col items-stretch gap-2 overflow-y-auto">
         <h3 className="text-sm uppercase tracking-wide px-1">
           Premier joueur: <span className="font-bold">{firstPlayer.name}</span>
         </h3>
@@ -73,7 +73,7 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element
               className="items-center"
             >
               <span className="flex-1 text-left">{player.name}</span>
-              <div className="font-normal flex flex-col items-end text-xs space-y-1">
+              <div className="font-normal flex flex-col items-end text-xs gap-1">
                 <span>{printScore(resultScore(result))}</span>
                 <span>Total: {playerScore(game, index, roundIndex)}</span>
               </div>

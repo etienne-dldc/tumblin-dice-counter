@@ -42,10 +42,10 @@ export function Content({ gameId }: Props): JSX.Element | null {
   }, [games, players]);
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 max-h-full">
+    <div className="flex flex-col items-stretch gap-4 max-h-full">
       <PanelHeader title="Joueurs" color="teal" />
-      <div className="flex flex-col items-stretch space-y-4 overflow-y-auto pb-4">
-        <div className="space-y-2">
+      <div className="flex flex-col items-stretch gap-4 overflow-y-auto pb-4">
+        <div className="flex flex-col gap-2">
           {players.length === 0 ? (
             <p className="py-4 text-center bg-gray-100 rounded-md">Aucun joueurs</p>
           ) : (
@@ -67,16 +67,18 @@ export function Content({ gameId }: Props): JSX.Element | null {
         {otherPlayers.length > 0 && (
           <Fragment>
             <h3 className="text-sm uppercase tracking-wide font-semibold px-1">Joueurs des parties précédantes</h3>
-            {otherPlayers.map((playerName, index) => (
-              <div
-                key={index}
-                className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border-2 border-teal-200 rounded cursor-pointer"
-                onClick={() => addPlayer(playerName)}
-              >
-                <Plus className="w-5 h-5 text-teal-600" weight="bold" />
-                <span className="flex-1 text-base pl-2">{playerName}</span>
-              </div>
-            ))}
+            <div className="flex flex-col gap-2">
+              {otherPlayers.map((playerName, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-200 rounded cursor-pointer"
+                  onClick={() => addPlayer(playerName)}
+                >
+                  <Plus className="w-5 h-5 text-teal-600" weight="bold" />
+                  <span className="flex-1 text-base pl-2">{playerName}</span>
+                </div>
+              ))}
+            </div>
           </Fragment>
         )}
       </div>
@@ -94,7 +96,7 @@ export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.
   const removePlayer = useStore((state) => state.removePlayer);
 
   return (
-    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border-2 border-teal-400 rounded">
+    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-400 rounded">
       <span className="flex-1 text-lg pl-2">{player.name}</span>
       <div className="flex flex-row items-center rounded overflow-hidden space-x-2">
         <button

@@ -70,9 +70,9 @@ export function Content({ roundIndex, gameId, playerIndex, selectedZone }: Props
   const selectedResult = selectedZone ? result[selectedZone] : null;
 
   return (
-    <div className="h-full flex flex-col items-stretch space-y-4 pb-4">
+    <div className="h-full flex flex-col items-stretch gap-4 pb-4">
       <PanelHeader color="red" title={`Tour n°${roundIndex + 1} - ${user.name} (${printScore(resultScore(result))})`} />
-      <div className="flex flex-col items-stretch space-y-2 flex-1 overflow-y-auto pb-2">
+      <div className="flex flex-col items-stretch gap-2 flex-1 overflow-y-auto pb-2">
         {ZONES.map((zone) => (
           <ZoneItem key={zone} zone={zone} result={result[zone]} active={selectedZone === zone} />
         ))}
@@ -101,7 +101,7 @@ export function ZoneItem({ active, zone, result }: ZoneItemProps): JSX.Element |
   return (
     <div
       className={clsx(
-        "flex p-2 rounded-md border-2 flex-col items-stretch space-y-2 px-2",
+        "flex p-2 rounded-md border flex-col items-stretch gap-2 px-2",
         active ? colors[color].active : colors[color].base,
         active && "font-bold"
       )}
@@ -188,7 +188,7 @@ export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element |
   const setZoneResult = useStore((state) => state.setZoneResult);
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 my-4 bg-slate-200 border-2 border-slate-300 p-4 rounded-xl shadow-lg">
+    <div className="flex flex-col items-stretch gap-4 my-4 bg-slate-200 border border-slate-300 p-4 rounded-xl shadow-lg">
       <div>
         <div className="flex flex-row items-center justify-around flex-wrap">
           {DICES.map((dice) => (
@@ -219,7 +219,7 @@ export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element |
           ))}
         </div>
       </div>
-      <div className="flex flex-row items-stretch rounded-md overflow-hidden divide-x-2 divide-gray-300 border-2 border-gray-300">
+      <div className="flex flex-row items-stretch rounded-md overflow-hidden divide-x divide-gray-300 border border-gray-300">
         <InlineButton
           color="blue"
           className="flex-1"

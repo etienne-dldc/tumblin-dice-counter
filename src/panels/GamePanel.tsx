@@ -38,10 +38,10 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
   }
 
   return (
-    <div className="flex flex-col items-stretch space-y-4 max-h-full">
+    <div className="flex flex-col items-stretch gap-4 max-h-full">
       <PanelHeader
         title={
-          <div className="flex flex-row items-center justify-center space-x-4">
+          <div className="flex flex-row items-center justify-center gap-4">
             <span>{game.name}</span>
             <button
               className="text-blue-500 rounded-md bg-blue-100 border-2 border-blue-200 p-1 hover:bg-blue-600 hover:text-white hover:border-blue-700"
@@ -69,7 +69,7 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
         }
         color="pink"
       />
-      <div className="flex flex-col items-stretch space-y-4 overflow-auto pb-4">
+      <div className="flex flex-col items-stretch gap-4 overflow-auto pb-4">
         <ListItem active={playersActive} color="pink" className="" onClick={selectPlayers}>
           {game.players.length === 0
             ? "Ajouter des joueurs"
@@ -84,15 +84,15 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
             <ListItem active={leaderboardActive} color="pink" className="" onClick={selectLeaderboard}>
               Classement
             </ListItem>
-            <div className="flex flex-col items-stretch space-y-2">
+            <div className="flex flex-col items-stretch gap-2">
               <h3 className="text-sm uppercase tracking-wide font-semibold px-1">Tours de jeux</h3>
 
               <div className="overflow-x-auto">
                 {game.rounds.length === 0 ? (
                   <p className="py-4 text-center bg-gray-100 rounded-md">Aucun tour de jeu</p>
                 ) : (
-                  <div className="space-y-2 min-h-full">
-                    <div className="px-4 border-2 border-transparent">
+                  <div className="flex flex-col gap-1 min-h-full">
+                    <div className="px-4 border border-transparent">
                       <Line
                         values={game.players.map((p) => (
                           <p className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden">{p.name}</p>
@@ -115,7 +115,7 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                         />
                       </ListItem>
                     ))}
-                    <div className="px-4 border-2 border-transparent">
+                    <div className="px-4 border border-transparent">
                       <Line
                         name="Total"
                         values={game.players.map((_p, playerIndex) => (

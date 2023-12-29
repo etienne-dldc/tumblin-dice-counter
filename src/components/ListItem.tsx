@@ -24,7 +24,7 @@ export function ListItem({ color, active, children, className, onClick }: ListIt
     <button
       onClick={onClick}
       className={clsx(
-        "flex p-2 px-4 rounded-md border-2",
+        "flex p-2 px-4 rounded-md border",
         className,
         active ? colors[color].active : colors[color].base,
         active && "font-bold"
