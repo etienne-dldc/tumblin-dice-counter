@@ -1,19 +1,21 @@
 {
   "name": "tumblin-dice-counter",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "vite",
     "build": "tsc && vite build",
+    "deploy": "yarn build && tar -cvf ./deploy.tar ./captain-definition ./dist/* && npx caprover deploy -t ./deploy.tar --default",
+    "dev": "vite",
     "serve": "vite preview",
     "typecheck": "tsc --noEmit",
-    "deploy": "yarn build && tar -cvf ./deploy.tar ./captain-definition ./dist/* && npx caprover deploy -t ./deploy.tar --default"
+    "typecheck:watch": "tsc --noEmit --watch"
   },
   "dependencies": {
+    "@dldc/material-colors": "^2.0.1",
     "caprover": "^2.2.3",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "immer": "^10.0.2",
-    "interpolated-material-colors": "^2.0.1",
-    "nanoid": "^4.0.2",
+    "nanoid": "^5.0.4",
     "phosphor-react": "^1.4.1",
     "react": "^18.2.0",
     "react-cool-onclickoutside": "^1.7.0",
@@ -24,15 +26,16 @@
   "devDependencies": {
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
-    "@typescript-eslint/eslint-plugin": "^5.59.5",
-    "@typescript-eslint/parser": "^5.59.5",
-    "@vitejs/plugin-react-refresh": "^1.3.1",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.40.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4",
-    "vite": "^4.3.5"
+    "vite": "^5.0.10"
   }
 }

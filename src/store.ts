@@ -22,9 +22,9 @@ export const DICES = [
   { value: 6, icon: DiceSix },
 ] as const;
 
-export type Dice = (typeof DICES)[number];
+export type TDice = (typeof DICES)[number];
 
-export type DiceValue = Dice["value"];
+export type TDiceValue = TDice["value"];
 
 export const ZONES = ["malus", "x1", "x2", "x3", "x4"] as const;
 
@@ -38,7 +38,7 @@ export const MULTIPLIER: Record<Zone, number> = {
   x4: 4,
 };
 
-export type ZoneResult = Array<DiceValue>;
+export type ZoneResult = Array<TDiceValue>;
 
 export type PlayerResult = Record<Zone, ZoneResult>;
 
@@ -132,8 +132,8 @@ export function playerScore(game: Game, playerIndex: number, lastRoundIndex: num
   return sum;
 }
 
-export function diceByValue(value: DiceValue): Dice {
-  return DICES.find((d) => d.value === value) as Dice;
+export function diceByValue(value: TDiceValue): TDice {
+  return DICES.find((d) => d.value === value) as TDice;
 }
 
 function selectedGame(ifGame: (game: Game, state: State) => void): StateFn {

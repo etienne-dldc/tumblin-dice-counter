@@ -1,9 +1,8 @@
 import { IconWeight } from "phosphor-react";
-import React from "react";
-import { Dice } from "../store";
+import { TDice } from "../store";
 
 type DiceProps = {
-  dice: Dice;
+  dice: TDice;
   className?: string;
   weight?: IconWeight;
 };

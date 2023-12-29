@@ -1,28 +1,28 @@
-import { Panel } from "../libs/panels";
+import clsx from "clsx";
+import { Plus, Trash } from "phosphor-react";
 import React from "react";
+import useOnclickOutside from "react-cool-onclickoutside";
+import { Dice } from "../components/Dice";
+import { InlineButton } from "../components/InlineButton";
 import { PanelHeader } from "../components/PanelHeader";
+import { Panel } from "../libs/panels";
+import { tw } from "../logic/Utils";
 import {
-  resultScore,
-  useStore,
-  Zone,
+  DICES,
+  MULTIPLIER,
+  MULT_SYMBOL,
+  TDiceValue,
   ZONES,
-  zoneScore,
+  Zone,
+  ZoneResult,
   diceByValue,
   printScore,
-  ZoneResult,
+  resultScore,
   resultSum,
-  MULTIPLIER,
+  useStore,
   zoneName,
-  MULT_SYMBOL,
-  DICES,
-  DiceValue,
+  zoneScore,
 } from "../store";
-import { Dice } from "../components/Dice";
-import clsx from "clsx";
-import { InlineButton } from "../components/InlineButton";
-import { tw } from "../logic/Utils";
-import { Plus, Trash } from "phosphor-react";
-import useOnclickOutside from "react-cool-onclickoutside";
 
 type Props = {
   gameId: string;
@@ -135,7 +135,7 @@ type DiceItemProps = {
   result: ZoneResult;
   zone: Zone;
   index: number;
-  dice: DiceValue;
+  dice: TDiceValue;
 };
 
 function DiceItem({ result, zone, index, dice }: DiceItemProps): JSX.Element | null {
