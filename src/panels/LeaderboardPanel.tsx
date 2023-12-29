@@ -14,7 +14,7 @@ type Props = {
 export function LeaderboardPanel(props: Props): Panel {
   return {
     key: `game/${props.gameId}/leaderboard`,
-    width: 450,
+    width: 800,
     content: <Content {...props} />,
   };
 }
@@ -107,7 +107,7 @@ function Content({ gameId }: Props) {
               <div
                 key={index}
                 className={clsx(
-                  "flex items-center gap-2 px-4 py-2 rounded-md border",
+                  "flex items-center gap-3 px-4 py-2 rounded-md border",
                   isSelected
                     ? positionStyles.selected
                     : selected === null
@@ -116,7 +116,7 @@ function Content({ gameId }: Props) {
                 )}
                 onClick={() => setSelected((p) => (p === playerIndex ? null : playerIndex))}
               >
-                <span className="text-xl font-bold w-10">{score}</span>
+                <span className="text-xl font-bold w-14 font-mono text-right">{score}</span>
                 <span className="text-xl">{player.name}</span>
                 <div className="flex-1" />
                 <div className="w-8 h-8 flex items-center justify-center">
