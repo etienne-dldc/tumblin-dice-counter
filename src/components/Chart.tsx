@@ -23,22 +23,24 @@ export function Chart({ data, selected }: ChartProps) {
   }, [data]);
 
   return (
-    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="bg-slate-100 rounded">
-      <g transform={`translate(${PADDING}, ${PADDING})`}>
-        {/* Graph */}
-        <g transform={`translate(${LEGEND_WIDTH + GAP}, 0)`}>
-          <Grid maxScore={maxScore} rounds={data[0].length + 1} />
-          {data.map((line, index) => {
-            if (selected === index) {
-              return null;
-            }
-            return <PlayerLine maxScore={maxScore} line={line} key={index} dimmed={selected !== null} />;
-          })}
-          {selected !== null && <PlayerLine selected maxScore={maxScore} line={data[selected]} dimmed={false} />}
+    <div className="aspect-[1000/500]">
+      <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="bg-slate-100 rounded">
+        <g transform={`translate(${PADDING}, ${PADDING})`}>
+          {/* Graph */}
+          <g transform={`translate(${LEGEND_WIDTH + GAP}, 0)`}>
+            <Grid maxScore={maxScore} rounds={data[0].length + 1} />
+            {data.map((line, index) => {
+              if (selected === index) {
+                return null;
+              }
+              return <PlayerLine maxScore={maxScore} line={line} key={index} dimmed={selected !== null} />;
+            })}
+            {selected !== null && <PlayerLine selected maxScore={maxScore} line={data[selected]} dimmed={false} />}
+          </g>
+          {/* Legend */}
         </g>
-        {/* Legend */}
-      </g>
-    </svg>
+      </svg>
+    </div>
   );
 }
 
