@@ -1,5 +1,5 @@
+import { DiceFive, DiceFour, DiceOne, DiceSix, DiceThree, DiceTwo } from "@phosphor-icons/react";
 import { customAlphabet } from "nanoid";
-import { DiceFive, DiceFour, DiceOne, DiceSix, DiceThree, DiceTwo } from "phosphor-react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

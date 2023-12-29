@@ -1,4 +1,4 @@
-import { Pencil, Plus, Trash } from "phosphor-react";
+import { Pencil, Plus, Trash } from "@phosphor-icons/react";
 import { Fragment, useMemo } from "react";
 import { Button } from "../components/Button";
 import { PanelHeader } from "../components/PanelHeader";

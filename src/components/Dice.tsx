@@ -1,4 +1,4 @@
-import { IconWeight } from "phosphor-react";
+import { IconWeight } from "@phosphor-icons/react";
 import { TDice } from "../store";
 
 type DiceProps = {

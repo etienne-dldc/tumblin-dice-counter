@@ -1,4 +1,4 @@
-import { Pencil, Trash } from "phosphor-react";
+import { Pencil, Trash } from "@phosphor-icons/react";
 import React, { Fragment } from "react";
 import { Button } from "../components/Button";
 import { ListItem } from "../components/ListItem";

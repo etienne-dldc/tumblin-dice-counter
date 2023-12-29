@@ -23,7 +23,7 @@ export function Chart({ data, selected }: ChartProps) {
   }, [data]);
 
   return (
-    <div className="aspect-[1000/500] bg-slate-100 rounded-md border border-slate-300">
+    <div className="aspect-[1000/500] bg-gray-100 rounded-md border border-gray-300">
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
         <g transform={`translate(${PADDING}, ${PADDING})`}>
           {/* Graph */}
@@ -81,13 +81,13 @@ function PlayerLine({ line, dimmed, maxScore, selected = false }: PlayerLineProp
           className={clsx(
             "fill-none",
             selected ? "stroke-[3]" : "stroke-2",
-            dimmed ? "stroke-slate-400" : "stroke-slate-700"
+            dimmed ? "stroke-gray-400" : "stroke-gray-700"
           )}
         />
       )}
       {!dimmed &&
         points.map((p, i) => {
-          return <circle key={i} cx={p.x} cy={p.y} r={4} className="fill-slate-400 stroke-1 stroke-slate-900" />;
+          return <circle key={i} cx={p.x} cy={p.y} r={4} className="fill-gray-400 stroke-1 stroke-gray-900" />;
         })}
     </g>
   );
@@ -106,7 +106,7 @@ function Grid({ maxScore, rounds }: GridProps) {
     <Fragment>
       {Array.from({ length: rounds }).map((_, i) => {
         const x = (GRAPH_WIDTH / (rounds - 1)) * i;
-        return <line key={`v-${i}`} x1={x} y1={0} x2={x} y2={GRAPH_HEIGHT} className="stroke-slate-300" />;
+        return <line key={`v-${i}`} x1={x} y1={0} x2={x} y2={GRAPH_HEIGHT} className="stroke-gray-300" />;
       })}
       {Array.from({ length: hLinesCount }).map((_, i) => {
         const y = GRAPH_HEIGHT - i * 100 * ratio;
@@ -115,14 +115,14 @@ function Grid({ maxScore, rounds }: GridProps) {
             <text
               x={-GAP - 5}
               y={y}
-              className="text-xs fill-slate-700"
+              className="text-xs fill-gray-700"
               textAnchor="end"
               alignmentBaseline="central"
               width={LEGEND_WIDTH}
             >
               {i * 100}
             </text>
-            <line x1={-GAP} y1={y} x2={GRAPH_WIDTH} y2={y} className="stroke-slate-300" />
+            <line x1={-GAP} y1={y} x2={GRAPH_WIDTH} y2={y} className="stroke-gray-300" />
           </Fragment>
         );
       })}

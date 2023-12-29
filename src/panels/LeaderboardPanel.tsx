@@ -1,5 +1,5 @@
+import { Trophy } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { Trophy } from "phosphor-react";
 import { useMemo, useState } from "react";
 import { Chart } from "../components/Chart";
 import { PanelHeader } from "../components/PanelHeader";
@@ -93,8 +93,8 @@ function Content({ gameId }: Props) {
                 unselected: tw`border-orange-900 bg-orange-50 opacity-50`,
               },
               rest: {
-                base: tw`border-slate-300 bg-slate-50`,
-                selected: tw`bg-slate-200 border-slate-400`,
+                base: tw`border-gray-300 bg-gray-50`,
+                selected: tw`bg-gray-200 border-gray-400`,
                 unselected: tw`opacity-50`,
               },
             };

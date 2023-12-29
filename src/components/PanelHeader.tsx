@@ -1,5 +1,5 @@
+import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { CaretLeft, CaretRight } from "phosphor-react";
 import React from "react";
 import { useLayoutInfos } from "../libs/panels";
 import { tw } from "../utils/functions";
