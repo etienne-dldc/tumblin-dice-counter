@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import { tw } from "../logic/Utils";
+import { tw } from "../utils/functions";
 
 const colors = {
   indigo: tw`bg-gray-100 hover:bg-indigo-500`,

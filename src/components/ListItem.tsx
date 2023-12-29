@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import { tw } from "../logic/Utils";
+import { tw } from "../utils/functions";
 
 const colors = {
   indigo: { base: tw`border-indigo-200`, active: tw`bg-indigo-200 border-indigo-600` },

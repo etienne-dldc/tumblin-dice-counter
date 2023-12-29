@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Panel, Panels, PanelsLayout } from "./libs/panels";
 import { SolvePanelsOptions } from "./libs/panels/Panels";
-import { mapMaybe } from "./logic/Utils";
 import { GamePanel } from "./panels/GamePanel";
 import { GamesPanel } from "./panels/GamesPanel";
 import { LeaderboardPanel } from "./panels/LeaderboardPanel";
@@ -10,6 +9,7 @@ import { PlayersPanel } from "./panels/PlayersPanel";
 import { RoundPanel } from "./panels/RoundPanel";
 import { WelcomePanel } from "./panels/WelcomePanel";
 import { useStore } from "./store";
+import { mapMaybe } from "./utils/functions";
 
 type MaybePanels = Array<Panel | null>;
 

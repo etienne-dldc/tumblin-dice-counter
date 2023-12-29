@@ -6,7 +6,6 @@ import { Dice } from "../components/Dice";
 import { InlineButton } from "../components/InlineButton";
 import { PanelHeader } from "../components/PanelHeader";
 import { Panel } from "../libs/panels";
-import { tw } from "../logic/Utils";
 import {
   DICES,
   MULTIPLIER,
@@ -23,6 +22,7 @@ import {
   zoneName,
   zoneScore,
 } from "../store";
+import { tw } from "../utils/functions";
 
 type Props = {
   gameId: string;

@@ -1,8 +1,8 @@
-import React from "react";
-import { CaretLeft, CaretRight } from "phosphor-react";
-import { useLayoutInfos } from "../libs/panels";
 import clsx from "clsx";
-import { tw } from "../logic/Utils";
+import { CaretLeft, CaretRight } from "phosphor-react";
+import React from "react";
+import { useLayoutInfos } from "../libs/panels";
+import { tw } from "../utils/functions";
 
 type Props = {
   title: React.ReactNode;
