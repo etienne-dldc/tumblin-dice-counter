@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "deploy": "yarn build && tar -cvf ./deploy.tar ./captain-definition ./dist/* && npx caprover deploy -t ./deploy.tar --default",
     "dev": "vite",
     "serve": "vite preview",
     "typecheck": "tsc --noEmit",
@@ -39,5 +38,6 @@
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4",
     "vite": "^5.0.10"
-  }
+  },
+  "packageManager": "pnpm@11.12.0+sha512.820a6fbd0d9f04c226638002aead1e45340a9139dd5dc077c1d83ef44aa2481c8eb6637b4c9aa696a3c7e35ba818e49cf27213e5f2b91138d09b7a3e26e898ba"
 }
