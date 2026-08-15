@@ -138,7 +138,7 @@ export function resultScore(result: PlayerResult): number {
 }
 
 export function resultDiceCount(result: PlayerResult): number {
-  return ZONES.reduce((sum, zone) => sum + result[zone].length, 0);
+  return ZONES.reduce((sum, zone) => (zone === "malus" ? sum : sum + result[zone].length), 0);
 }
 
 export function roundBonus(game: Game, result: PlayerResult): number {

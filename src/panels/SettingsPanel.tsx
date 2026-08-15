@@ -58,8 +58,8 @@ export function Content({ gameId }: Props): ReactElement | null {
             <NewBadge />
           </div>
           <p className="text-sm text-gray-600">
-            Si activé, un joueur qui place tous ses dés sur le plateau (malus inclus) lors d'un tour
-            reçoit les points de bonus.
+            Si activé, un joueur qui place tous ses dés sur le plateau (hors zone malus) lors d'un
+            tour reçoit les points de bonus.
           </p>
           {bonus.enabled && (
             <div className={clsx("flex flex-col gap-3 pt-2 border-t", tw`border-purple-200`)}>
