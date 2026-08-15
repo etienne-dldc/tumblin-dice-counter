@@ -2,6 +2,7 @@ import { Trash } from "@phosphor-icons/react";
 import clsx from "cnfast";
 import { type ReactElement, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
+import { BonusStar } from "../components/BonusStar";
 import { Dice } from "../components/Dice";
 import { DiceSelector } from "../components/DiceSelector";
 import { PanelHeader } from "../components/PanelHeader";
@@ -9,7 +10,9 @@ import type { Panel } from "../libs/panels";
 import {
   diceByValue,
   printScore,
-  resultScore,
+  resultDiceCount,
+  roundBonus,
+  roundScore,
   type TDiceValue,
   useStore,
   type Zone,
@@ -63,19 +66,62 @@ export function Content({
     }
     return result;
   });
+  const bonus = useStore((state) => {
+    const game = state.games.find((game) => game.id === gameId);
+    if (!game) {
+      return null;
+    }
+    return game.bonus;
+  });
+  const game = useStore((state) => {
+    const game = state.games.find((game) => game.id === gameId);
+    if (!game) {
+      return null;
+    }
+    return game;
+  });
 
-  if (user === null || result === null) {
+  if (user === null || result === null || game === null) {
     return null;
   }
 
   const selectedResult = selectedZone ? result[selectedZone] : null;
+  const bonusEnabled = bonus?.enabled === true;
+  const bonusDiceCount = bonus ? resultDiceCount(result) : 0;
+  const bonusReached =
+    bonusEnabled && bonus != null && bonus.diceCount > 0 && bonusDiceCount >= bonus.diceCount;
+  const hasBonus = roundBonus(game, result) > 0;
 
   return (
     <div className="h-full flex flex-col items-stretch gap-4 pb-4">
       <PanelHeader
         color="red"
-        title={`Tour n°${roundIndex + 1} - ${user.name} (${printScore(resultScore(result))})`}
+        title={
+          <span className="flex items-center justify-center gap-1">
+            {`Tour n°${roundIndex + 1} - ${user.name} (${printScore(roundScore(game, result))})`}
+            {hasBonus && <BonusStar className="w-5 h-5" />}
+          </span>
+        }
       />
+      {bonusEnabled && bonus != null && (
+        <div
+          className={clsx(
+            "flex items-center justify-between px-3 py-1.5 rounded-md border text-sm",
+            bonusReached
+              ? tw`bg-purple-200 border-purple-500 text-purple-800`
+              : tw`bg-purple-50 border-purple-300 text-purple-700`,
+          )}
+        >
+          <span className="flex items-center gap-1.5 font-semibold">
+            <BonusStar className="w-4 h-4" />
+            Bonus tous les dés
+          </span>
+          <span>
+            {bonusDiceCount} / {bonus.diceCount}
+          </span>
+          <span className="font-mono font-bold">+{bonusReached ? bonus.bonusPoints : 0}</span>
+        </div>
+      )}
       <div className="flex flex-col items-stretch gap-2 flex-1 overflow-y-auto pb-2">
         {ZONES.map((zone) => (
           <ZoneItem key={zone} zone={zone} result={result[zone]} active={selectedZone === zone} />

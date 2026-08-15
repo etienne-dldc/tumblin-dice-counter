@@ -17,6 +17,7 @@ const colors = {
   red: { main: tw`bg-red-100`, icon: tw`text-red-900` },
   teal: { main: tw`bg-teal-100`, icon: tw`text-teal-900` },
   pink: { main: tw`bg-pink-100`, icon: tw`text-pink-900` },
+  purple: { main: tw`bg-purple-100`, icon: tw`text-purple-900` },
 };
 
 export function PanelHeader({

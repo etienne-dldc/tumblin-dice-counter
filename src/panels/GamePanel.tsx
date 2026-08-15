@@ -1,10 +1,19 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
 import React, { Fragment, type ReactElement } from "react";
+import { BonusStar } from "../components/BonusStar";
 import { Button } from "../components/Button";
 import { ListItem } from "../components/ListItem";
+import { NewBadge } from "../components/NewBadge";
 import { PanelHeader } from "../components/PanelHeader";
 import type { Panel } from "../libs/panels";
-import { type GameSelected, playerScore, printScore, resultScore, useStore } from "../store";
+import {
+  type GameSelected,
+  playerScore,
+  printScore,
+  roundBonus,
+  roundScore,
+  useStore,
+} from "../store";
 
 type Props = {
   gameId: string;
@@ -27,10 +36,12 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
   const addRound = useStore((state) => state.addRound);
   const selectPlayers = useStore((state) => state.selectPlayers);
   const selectLeaderboard = useStore((state) => state.selectLeaderboard);
+  const selectSettings = useStore((state) => state.selectSettings);
   const selectRound = useStore((state) => state.selectRound);
 
   const playersActive = selected?.type === "players";
   const leaderboardActive = selected?.type === "leaderboard";
+  const settingsActive = selected?.type === "settings";
   const activeRound = selected?.type === "round" ? selected.roundIndex : null;
 
   if (!game) {
@@ -89,6 +100,10 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
             >
               Classement
             </ListItem>
+            <ListItem active={settingsActive} color="purple" className="" onClick={selectSettings}>
+              <span className="flex-1 text-left">Réglages</span>
+              <NewBadge />
+            </ListItem>
             <div className="flex flex-col items-stretch gap-2">
               <h3 className="text-sm uppercase tracking-wide font-semibold px-1">Tours de jeux</h3>
 
@@ -120,8 +135,11 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
                         <Line
                           name={`Tour n°${index + 1}`}
                           values={round.results.map((result, i) => (
-                            <p key={i} className="text-right">
-                              {printScore(resultScore(result))}
+                            <p key={i} className="text-right flex items-center justify-end gap-1">
+                              {roundBonus(game, result) > 0 && (
+                                <BonusStar className="w-3.5 h-3.5 shrink-0" />
+                              )}
+                              {printScore(roundScore(game, result))}
                             </p>
                           ))}
                         />

@@ -42,6 +42,18 @@ export type ZoneResult = Array<TDiceValue>;
 
 export type PlayerResult = Record<Zone, ZoneResult>;
 
+export type BonusConfig = {
+  enabled: boolean;
+  diceCount: number;
+  bonusPoints: number;
+};
+
+export const DEFAULT_BONUS: BonusConfig = {
+  enabled: false,
+  diceCount: 4,
+  bonusPoints: 20,
+};
+
 export type Round = {
   results: Array<PlayerResult>;
 };
@@ -51,6 +63,7 @@ export type Game = {
   name: string;
   players: Array<Player>;
   rounds: Array<Round>;
+  bonus: BonusConfig;
 };
 
 export type RoundSelected = {
@@ -59,7 +72,12 @@ export type RoundSelected = {
   selectedPlayer: null | { playerIndex: number; selectedZone: null | Zone };
 };
 
-export type GameSelected = null | { type: "players" } | { type: "leaderboard" } | RoundSelected;
+export type GameSelected =
+  | null
+  | { type: "players" }
+  | { type: "leaderboard" }
+  | { type: "settings" }
+  | RoundSelected;
 
 export type Selected = null | {
   gameId: string;
@@ -84,6 +102,8 @@ export type State = {
   selectGame: (gameId: string) => void;
   selectPlayers: () => void;
   selectLeaderboard: () => void;
+  selectSettings: () => void;
+  setBonusConfig: (config: Partial<BonusConfig>) => void;
   selectRound: (roundIndex: number) => void;
   selectPlayer: (playerIndex: number) => void;
   selectZone: (zone: Zone) => void;
@@ -117,6 +137,22 @@ export function resultScore(result: PlayerResult): number {
   return ZONES.reduce((sum, zone) => sum + zoneScore(zone, result[zone]), 0);
 }
 
+export function resultDiceCount(result: PlayerResult): number {
+  return ZONES.reduce((sum, zone) => sum + result[zone].length, 0);
+}
+
+export function roundBonus(game: Game, result: PlayerResult): number {
+  const { enabled, diceCount, bonusPoints } = game.bonus;
+  if (!enabled || diceCount <= 0) {
+    return 0;
+  }
+  return resultDiceCount(result) >= diceCount ? bonusPoints : 0;
+}
+
+export function roundScore(game: Game, result: PlayerResult): number {
+  return resultScore(result) + roundBonus(game, result);
+}
+
 export function printScore(score: number): string {
   return score > 0 ? "+" + score : score.toFixed(0);
 }
@@ -131,7 +167,7 @@ export function playerScore(
   for (let i = 0; i <= roundIndex; i++) {
     const round = game.rounds[i];
     const result = round.results[playerIndex];
-    sum += resultScore(result);
+    sum += roundScore(game, result);
   }
   return sum;
 }
@@ -189,6 +225,7 @@ export const useStore = create<State>()(
               name: `Partie ${state.games.length + 1}`,
               players: [],
               rounds: [],
+              bonus: { ...DEFAULT_BONUS },
             };
             state.games.push(game);
           }),
@@ -291,6 +328,18 @@ export const useStore = create<State>()(
               state.selected.selected = { type: "leaderboard" };
             }
           }),
+        selectSettings: () =>
+          set((state) => {
+            if (state.selected) {
+              state.selected.selected = { type: "settings" };
+            }
+          }),
+        setBonusConfig: (config) =>
+          set(
+            selectedGame((game) => {
+              game.bonus = { ...game.bonus, ...config };
+            }),
+          ),
         selectRound: (roundIndex) =>
           set((state) => {
             if (state.selected) {
@@ -316,7 +365,21 @@ export const useStore = create<State>()(
             }
           }),
       }),
-      { name: "TUMBLIN_DICE_V1" },
+      {
+        name: "TUMBLIN_DICE_V1",
+        version: 2,
+        migrate: (persistedState, version) => {
+          if (version < 2) {
+            const state = (persistedState ?? {}) as { games?: Array<Game> };
+            const games = (state.games ?? []).map((g) => ({
+              ...g,
+              bonus: g.bonus ?? { ...DEFAULT_BONUS },
+            }));
+            return { ...state, games };
+          }
+          return persistedState;
+        },
+      },
     ),
   ),
 );

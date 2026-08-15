@@ -7,6 +7,7 @@ import { LeaderboardPanel } from "./panels/LeaderboardPanel";
 import { PlayerPanel } from "./panels/PlayerPanel";
 import { PlayersPanel } from "./panels/PlayersPanel";
 import { RoundPanel } from "./panels/RoundPanel";
+import { SettingsPanel } from "./panels/SettingsPanel";
 import { WelcomePanel } from "./panels/WelcomePanel";
 import { useStore } from "./store";
 import { mapMaybe } from "./utils/functions";
@@ -31,6 +32,9 @@ export function App() {
               }
               if (gameInner.type === "leaderboard") {
                 return [LeaderboardPanel({ gameId: selected.gameId })];
+              }
+              if (gameInner.type === "settings") {
+                return [SettingsPanel({ gameId: selected.gameId })];
               }
               if (gameInner.type === "round") {
                 return [

@@ -15,6 +15,7 @@ const colors = {
   },
   teal: { base: tw`border-teal-200`, active: tw`bg-teal-200 border-teal-600` },
   pink: { base: tw`border-pink-200`, active: tw`bg-pink-200 border-pink-600` },
+  purple: { base: tw`border-purple-200`, active: tw`bg-purple-200 border-purple-600` },
 } as const;
 
 type ListItemProps = {

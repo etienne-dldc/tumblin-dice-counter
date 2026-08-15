@@ -1,8 +1,9 @@
 import { useMemo, type ReactElement } from "react";
+import { BonusStar } from "../components/BonusStar";
 import { ListItem } from "../components/ListItem";
 import { PanelHeader } from "../components/PanelHeader";
 import type { Panel } from "../libs/panels";
-import { playerScore, printScore, resultScore, useStore } from "../store";
+import { playerScore, printScore, roundBonus, roundScore, useStore } from "../store";
 
 type Props = {
   gameId: string;
@@ -74,7 +75,10 @@ export function Content({ roundIndex, gameId, playerIndex }: Props): ReactElemen
             >
               <span className="flex-1 text-left">{player.name}</span>
               <div className="font-normal flex flex-col items-end text-xs gap-1">
-                <span>{printScore(resultScore(result))}</span>
+                <span className="flex items-center gap-1">
+                  {roundBonus(game, result) > 0 && <BonusStar className="w-3.5 h-3.5 shrink-0" />}
+                  {printScore(roundScore(game, result))}
+                </span>
                 <span>Total: {playerScore(game, index, roundIndex)}</span>
               </div>
             </ListItem>

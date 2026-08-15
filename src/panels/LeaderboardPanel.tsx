@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Chart } from "../components/Chart";
 import { PanelHeader } from "../components/PanelHeader";
 import type { Panel } from "../libs/panels";
-import { playerScore, resultScore, useStore } from "../store";
+import { playerScore, roundScore, useStore } from "../store";
 import { tw } from "../utils/functions";
 
 type Props = {
@@ -63,7 +63,7 @@ function Content({ gameId }: Props) {
     game.rounds.forEach((round) => {
       round.results.forEach((result, index) => {
         const arr = data[index];
-        arr.push(arr[arr.length - 1] + resultScore(result));
+        arr.push(arr[arr.length - 1] + roundScore(game, result));
       });
     });
     return data;
