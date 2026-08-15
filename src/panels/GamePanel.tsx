@@ -1,17 +1,17 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
 import React, { Fragment, type ReactElement } from "react";
-import { BonusStar } from "../components/BonusStar";
 import { Button } from "../components/Button";
 import { ListItem } from "../components/ListItem";
 import { NewBadge } from "../components/NewBadge";
 import { PanelHeader } from "../components/PanelHeader";
+import { ScoreBreakdown } from "../components/ScoreBreakdown";
 import type { Panel } from "../libs/panels";
 import {
   type GameSelected,
   playerScore,
-  printScore,
+  resultScore,
   roundBonus,
-  roundScore,
+  roundBounty,
   useStore,
 } from "../store";
 
@@ -47,6 +47,10 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
   if (!game) {
     return null;
   }
+
+  const bonusEnabled = game.bonus.enabled;
+  const bountyEnabled = game.bounty.enabled;
+  const columnWidth = 60 + (bonusEnabled ? 60 : 0) + (bountyEnabled ? 60 : 0);
 
   return (
     <div className="flex flex-col items-stretch gap-4 max-h-full">
@@ -114,10 +118,12 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
                   <div className="flex flex-col gap-1 min-h-full">
                     <div className="px-4 border border-transparent">
                       <Line
+                        columnWidth={columnWidth}
                         values={game.players.map((p, i) => (
                           <p
                             key={i}
-                            className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden"
+                            className="text-right text-ellipsis whitespace-nowrap overflow-hidden"
+                            style={{ width: columnWidth }}
                           >
                             {p.name}
                           </p>
@@ -133,13 +139,15 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
                         onClick={() => selectRound(index)}
                       >
                         <Line
+                          columnWidth={columnWidth}
                           name={`Tour n°${index + 1}`}
                           values={round.results.map((result, i) => (
-                            <p key={i} className="text-right flex items-center justify-end gap-1">
-                              {roundBonus(game, result) > 0 && (
-                                <BonusStar className="w-3.5 h-3.5 shrink-0" />
-                              )}
-                              {printScore(roundScore(game, result))}
+                            <p key={i} className="text-right flex items-center justify-end">
+                              <ScoreBreakdown
+                                baseScore={resultScore(result)}
+                                bonusScore={roundBonus(game, result)}
+                                bountyScore={roundBounty(game, i, index)}
+                              />
                             </p>
                           ))}
                         />
@@ -147,6 +155,7 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
                     ))}
                     <div className="px-4 border border-transparent">
                       <Line
+                        columnWidth={columnWidth}
                         name="Total"
                         values={game.players.map((_p, playerIndex) => (
                           <p key={playerIndex} className="text-right font-bold">
@@ -172,16 +181,21 @@ export function Content({ gameId, selected }: Props): ReactElement | null {
 type LineProps = {
   name?: string;
   values: Array<React.ReactElement>;
+  columnWidth: number;
 };
 
-function Line({ name, values }: LineProps): ReactElement {
+function Line({ name, values, columnWidth }: LineProps): ReactElement {
   return (
     <div className="flex flex-row items-center text-left tracking-normal space-x-4">
       <div className="w-24 shrink-0">
         {name && <p className="text-sm uppercase tracking-wide font-semibold">{name}</p>}
       </div>
       {values.map((content, index) => (
-        <div key={index} className="w-32 shrink-0 overflow-hidden text-ellipsis">
+        <div
+          key={index}
+          className="shrink-0 overflow-hidden text-ellipsis"
+          style={{ width: columnWidth }}
+        >
           {content}
         </div>
       ))}

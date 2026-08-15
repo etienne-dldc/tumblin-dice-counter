@@ -3,16 +3,20 @@ import clsx from "cnfast";
 import { type ReactElement, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { BonusStar } from "../components/BonusStar";
+import { BountyIcon } from "../components/BountyIcon";
 import { Dice } from "../components/Dice";
 import { DiceSelector } from "../components/DiceSelector";
 import { PanelHeader } from "../components/PanelHeader";
+import { ScoreBreakdown } from "../components/ScoreBreakdown";
 import type { Panel } from "../libs/panels";
 import {
   diceByValue,
+  getGameProgression,
   printScore,
   resultDiceCount,
+  resultScore,
   roundBonus,
-  roundScore,
+  roundBounty,
   type TDiceValue,
   useStore,
   type Zone,
@@ -90,7 +94,14 @@ export function Content({
   const bonusDiceCount = bonus ? resultDiceCount(result) : 0;
   const bonusReached =
     bonusEnabled && bonus != null && bonus.diceCount > 0 && bonusDiceCount >= bonus.diceCount;
-  const hasBonus = roundBonus(game, result) > 0;
+
+  const bountyResult = getGameProgression(game).bountyResults[roundIndex];
+  const bountyEnabled = game.bounty.enabled;
+  const bountyTargetIndex = bountyResult?.targetIndex ?? null;
+  const bountyPot = bountyResult?.pot ?? 0;
+  const isBountyTarget = bountyEnabled && playerIndex === bountyTargetIndex;
+  const targetPlayer =
+    bountyEnabled && bountyTargetIndex !== null ? game.players[bountyTargetIndex] : null;
 
   return (
     <div className="h-full flex flex-col items-stretch gap-4 pb-4">
@@ -98,8 +109,12 @@ export function Content({
         color="red"
         title={
           <span className="flex items-center justify-center gap-1">
-            {`Tour n°${roundIndex + 1} - ${user.name} (${printScore(roundScore(game, result))})`}
-            {hasBonus && <BonusStar className="w-5 h-5" />}
+            {`Tour n°${roundIndex + 1} - ${user.name} `}
+            <ScoreBreakdown
+              baseScore={resultScore(result)}
+              bonusScore={roundBonus(game, result)}
+              bountyScore={roundBounty(game, playerIndex, roundIndex)}
+            />
           </span>
         }
       />
@@ -120,6 +135,22 @@ export function Content({
             {bonusDiceCount} / {bonus.diceCount}
           </span>
           <span className="font-mono font-bold">+{bonusReached ? bonus.bonusPoints : 0}</span>
+        </div>
+      )}
+      {bountyEnabled && targetPlayer && bountyPot > 0 && (
+        <div
+          className={clsx(
+            "flex items-center justify-between px-3 py-1.5 rounded-md border text-sm",
+            isBountyTarget
+              ? tw`bg-orange-200 border-orange-500 text-orange-800`
+              : tw`bg-orange-50 border-orange-300 text-orange-700`,
+          )}
+        >
+          <span className="flex items-center gap-1.5 font-semibold">
+            <BountyIcon className="w-4 h-4" />
+            {isBountyTarget ? "Bounty: en danger" : `Bounty: ${targetPlayer.name}`}
+          </span>
+          <span className="font-mono font-bold">+{bountyPot}</span>
         </div>
       )}
       <div className="flex flex-col items-stretch gap-2 flex-1 overflow-y-auto pb-2">

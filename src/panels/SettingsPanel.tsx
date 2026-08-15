@@ -1,6 +1,7 @@
 import { type ReactElement, useState } from "react";
 import clsx from "cnfast";
 import { BonusStar } from "../components/BonusStar";
+import { BountyIcon } from "../components/BountyIcon";
 import { NewBadge } from "../components/NewBadge";
 import { PanelHeader } from "../components/PanelHeader";
 import type { Panel } from "../libs/panels";
@@ -27,9 +28,17 @@ export function Content({ gameId }: Props): ReactElement | null {
     }
     return game.bonus;
   });
+  const bounty = useStore((state) => {
+    const game = state.games.find((game) => game.id === gameId);
+    if (!game) {
+      return null;
+    }
+    return game.bounty;
+  });
   const setBonusConfig = useStore((state) => state.setBonusConfig);
+  const setBountyConfig = useStore((state) => state.setBountyConfig);
 
-  if (bonus === null) {
+  if (bonus === null || bounty === null) {
     return null;
   }
 
@@ -67,13 +76,52 @@ export function Content({ gameId }: Props): ReactElement | null {
                 label="Nombre de dés par équipe"
                 value={bonus.diceCount}
                 min={1}
+                color="purple"
                 onChange={(v) => setBonusConfig({ diceCount: v })}
               />
               <NumberInput
                 label="Points de bonus"
                 value={bonus.bonusPoints}
                 min={0}
+                color="purple"
                 onChange={(v) => setBonusConfig({ bonusPoints: v })}
+              />
+            </div>
+          )}
+        </div>
+        <div
+          className={clsx(
+            "flex flex-col gap-3 p-4 rounded-md border",
+            tw`bg-orange-50 border-orange-200`,
+          )}
+        >
+          <div className="flex flex-row items-center gap-2">
+            <BountyIcon className="w-5 h-5" />
+            <input
+              id="bounty-enabled"
+              type="checkbox"
+              checked={bounty.enabled}
+              onChange={(e) => setBountyConfig({ enabled: e.target.checked })}
+              className="w-5 h-5"
+            />
+            <label htmlFor="bounty-enabled" className="text-lg font-semibold">
+              Bounty
+            </label>
+            <NewBadge />
+          </div>
+          <p className="text-sm text-gray-600">
+            Si activé, le joueur en tête a une prime sur sa tête. Celui qui le dépasse au score du
+            tour récupère la prime (partagée si plusieurs). La prime grossit de {bounty.amount}{" "}
+            points chaque tour où il reste en tête.
+          </p>
+          {bounty.enabled && (
+            <div className={clsx("flex flex-col gap-3 pt-2 border-t", tw`border-orange-200`)}>
+              <NumberInput
+                label="Montant par tour"
+                value={bounty.amount}
+                min={0}
+                color="orange"
+                onChange={(v) => setBountyConfig({ amount: v })}
               />
             </div>
           )}
@@ -87,10 +135,16 @@ type NumberInputProps = {
   label: string;
   value: number;
   min: number;
+  color: "purple" | "orange";
   onChange: (value: number) => void;
 };
 
-function NumberInput({ label, value, min, onChange }: NumberInputProps): ReactElement {
+const inputColors = {
+  purple: tw`border-purple-300`,
+  orange: tw`border-orange-300`,
+} as const;
+
+function NumberInput({ label, value, min, color, onChange }: NumberInputProps): ReactElement {
   const [text, setText] = useState(String(value));
 
   return (
@@ -100,7 +154,7 @@ function NumberInput({ label, value, min, onChange }: NumberInputProps): ReactEl
         type="number"
         min={min}
         value={text}
-        className={clsx("px-3 py-2 rounded-md border bg-white text-base", tw`border-purple-300`)}
+        className={clsx("px-3 py-2 rounded-md border bg-white text-base", inputColors[color])}
         onChange={(e) => {
           setText(e.target.value);
           const parsed = Number(e.target.value);

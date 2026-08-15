@@ -54,6 +54,16 @@ export const DEFAULT_BONUS: BonusConfig = {
   bonusPoints: 20,
 };
 
+export type BountyConfig = {
+  enabled: boolean;
+  amount: number;
+};
+
+export const DEFAULT_BOUNTY: BountyConfig = {
+  enabled: false,
+  amount: 10,
+};
+
 export type Round = {
   results: Array<PlayerResult>;
 };
@@ -64,6 +74,7 @@ export type Game = {
   players: Array<Player>;
   rounds: Array<Round>;
   bonus: BonusConfig;
+  bounty: BountyConfig;
 };
 
 export type RoundSelected = {
@@ -104,6 +115,7 @@ export type State = {
   selectLeaderboard: () => void;
   selectSettings: () => void;
   setBonusConfig: (config: Partial<BonusConfig>) => void;
+  setBountyConfig: (config: Partial<BountyConfig>) => void;
   selectRound: (roundIndex: number) => void;
   selectPlayer: (playerIndex: number) => void;
   selectZone: (zone: Zone) => void;
@@ -153,6 +165,144 @@ export function roundScore(game: Game, result: PlayerResult): number {
   return resultScore(result) + roundBonus(game, result);
 }
 
+export type RoundBountyResult = {
+  targetIndex: number | null;
+  pot: number;
+  collectors: Array<number>;
+  perCollector: number;
+  targetLoss: number;
+};
+
+export type GameProgression = {
+  cumulativeScores: Array<Array<number>>;
+  leaders: Array<number | null>;
+  bountyResults: Array<RoundBountyResult>;
+};
+
+function leaderAtRound(cumulative: Array<number>): number | null {
+  let maxIndex: number | null = null;
+  let maxValue = -Infinity;
+  for (let i = 0; i < cumulative.length; i++) {
+    if (cumulative[i] > maxValue) {
+      maxValue = cumulative[i];
+      maxIndex = i;
+    }
+  }
+  return maxIndex;
+}
+
+export function computeGameProgression(game: Game): GameProgression {
+  const playerCount = game.players.length;
+  const cumulativeScores: Array<Array<number>> = [];
+  const leaders: Array<number | null> = [];
+  const bountyResults: Array<RoundBountyResult> = [];
+  const cumulative = new Array(playerCount).fill(0);
+  const bountyEnabled = game.bounty.enabled && game.bounty.amount > 0;
+  let consecutiveLeader: number | null = null;
+  let consecutiveCount = 0;
+
+  for (let roundIndex = 0; roundIndex < game.rounds.length; roundIndex++) {
+    const round = game.rounds[roundIndex];
+
+    // Determine the leader from previous round's cumulative scores
+    let targetIndex: number | null = null;
+    let pot = 0;
+    if (bountyEnabled && roundIndex > 0 && playerCount > 1) {
+      targetIndex = leaderAtRound(cumulative);
+      if (targetIndex !== null) {
+        if (consecutiveLeader === targetIndex) {
+          consecutiveCount += 1;
+        } else {
+          consecutiveLeader = targetIndex;
+          consecutiveCount = 1;
+        }
+        pot = game.bounty.amount * consecutiveCount;
+      }
+    }
+
+    const collectors: Array<number> = [];
+    if (targetIndex !== null && pot > 0) {
+      const targetRawScore = roundScore(game, round.results[targetIndex]);
+      for (let p = 0; p < playerCount; p++) {
+        if (p === targetIndex) {
+          continue;
+        }
+        const playerRaw = roundScore(game, round.results[p]);
+        if (playerRaw > targetRawScore) {
+          collectors.push(p);
+        }
+      }
+    }
+
+    const perCollector = collectors.length > 0 ? Math.ceil(pot / collectors.length) : 0;
+    const targetLoss = collectors.length > 0 ? pot : 0;
+
+    bountyResults.push({ targetIndex, pot, collectors, perCollector, targetLoss });
+
+    // Reset consecutive count when bounty is collected
+    if (collectors.length > 0) {
+      consecutiveLeader = null;
+      consecutiveCount = 0;
+    }
+
+    // Update cumulative scores with raw round score + bounty adjustments
+    for (let p = 0; p < playerCount; p++) {
+      let adjustment = 0;
+      if (p === targetIndex) {
+        adjustment -= targetLoss;
+      }
+      if (collectors.includes(p)) {
+        adjustment += perCollector;
+      }
+      cumulative[p] += roundScore(game, round.results[p]) + adjustment;
+    }
+
+    cumulativeScores.push([...cumulative]);
+    leaders.push(leaderAtRound(cumulative));
+  }
+
+  return { cumulativeScores, leaders, bountyResults };
+}
+
+const progressionCache = new WeakMap<Game, GameProgression>();
+
+export function getGameProgression(game: Game): GameProgression {
+  const cached = progressionCache.get(game);
+  if (cached) {
+    return cached;
+  }
+  const progression = computeGameProgression(game);
+  progressionCache.set(game, progression);
+  return progression;
+}
+
+export function roundBounty(game: Game, playerIndex: number, roundIndex: number): number {
+  if (!game.bounty.enabled) {
+    return 0;
+  }
+  const progression = getGameProgression(game);
+  const result = progression.bountyResults[roundIndex];
+  if (!result) {
+    return 0;
+  }
+  if (result.targetIndex === playerIndex) {
+    return -result.targetLoss;
+  }
+  if (result.collectors.includes(playerIndex)) {
+    return result.perCollector;
+  }
+  return 0;
+}
+
+export function roundTotalScore(
+  game: Game,
+  result: PlayerResult,
+  playerIndex: number,
+  roundIndex: number,
+): number {
+  return roundScore(game, result) + roundBounty(game, playerIndex, roundIndex);
+}
+
 export function printScore(score: number): string {
   return score > 0 ? "+" + score : score.toFixed(0);
 }
@@ -167,7 +317,7 @@ export function playerScore(
   for (let i = 0; i <= roundIndex; i++) {
     const round = game.rounds[i];
     const result = round.results[playerIndex];
-    sum += roundScore(game, result);
+    sum += roundTotalScore(game, result, playerIndex, i);
   }
   return sum;
 }
@@ -226,6 +376,7 @@ export const useStore = create<State>()(
               players: [],
               rounds: [],
               bonus: { ...DEFAULT_BONUS },
+              bounty: { ...DEFAULT_BOUNTY },
             };
             state.games.push(game);
           }),
@@ -340,6 +491,12 @@ export const useStore = create<State>()(
               game.bonus = { ...game.bonus, ...config };
             }),
           ),
+        setBountyConfig: (config) =>
+          set(
+            selectedGame((game) => {
+              game.bounty = { ...game.bounty, ...config };
+            }),
+          ),
         selectRound: (roundIndex) =>
           set((state) => {
             if (state.selected) {
@@ -367,17 +524,24 @@ export const useStore = create<State>()(
       }),
       {
         name: "TUMBLIN_DICE_V1",
-        version: 2,
+        version: 3,
         migrate: (persistedState, version) => {
+          let state = (persistedState ?? {}) as { games?: Array<Game> };
           if (version < 2) {
-            const state = (persistedState ?? {}) as { games?: Array<Game> };
             const games = (state.games ?? []).map((g) => ({
               ...g,
               bonus: g.bonus ?? { ...DEFAULT_BONUS },
             }));
-            return { ...state, games };
+            state = { ...state, games };
           }
-          return persistedState;
+          if (version < 3) {
+            const games = (state.games ?? []).map((g) => ({
+              ...g,
+              bounty: g.bounty ?? { ...DEFAULT_BOUNTY },
+            }));
+            state = { ...state, games };
+          }
+          return state;
         },
       },
     ),

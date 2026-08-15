@@ -1,8 +1,14 @@
 import clsx from "cnfast";
-import type { ReactElement } from "react";
+import { useMemo, type ReactElement } from "react";
 import { tw } from "../utils/functions";
 
-export function NewBadge(): ReactElement {
+const EXPIRY = new Date("2027-02-16T00:00:00Z").getTime();
+
+export function NewBadge(): ReactElement | null {
+  const visible = useMemo(() => Date.now() < EXPIRY, []);
+  if (!visible) {
+    return null;
+  }
   return (
     <span
       className={clsx(
