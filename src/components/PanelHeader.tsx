@@ -1,6 +1,6 @@
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
-import clsx from "clsx";
-import React from "react";
+import clsx from "cnfast";
+import type { ReactElement } from "react";
 import { useLayoutInfos } from "../libs/panels";
 import { tw } from "../utils/functions";
 
@@ -19,7 +19,11 @@ const colors = {
   pink: { main: tw`bg-pink-100`, icon: tw`text-pink-900` },
 };
 
-export function PanelHeader({ title, color = "indigo", onHeaderClick }: Props): JSX.Element | null {
+export function PanelHeader({
+  title,
+  color = "indigo",
+  onHeaderClick,
+}: Props): ReactElement | null {
   const layoutInfos = useLayoutInfos();
 
   const onBack = layoutInfos?.showParent ?? null;

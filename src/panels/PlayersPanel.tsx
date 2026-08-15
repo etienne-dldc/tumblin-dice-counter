@@ -1,9 +1,9 @@
 import { Pencil, Plus, Trash } from "@phosphor-icons/react";
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, type ReactElement } from "react";
 import { Button } from "../components/Button";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel } from "../libs/panels";
-import { Player, useStore } from "../store";
+import type { Panel } from "../libs/panels";
+import { useStore, type Player } from "../store";
 
 type Props = {
   gameId: string;
@@ -17,7 +17,7 @@ export function PlayersPanel(props: Props): Panel {
   };
 }
 
-export function Content({ gameId }: Props): JSX.Element | null {
+export function Content({ gameId }: Props): ReactElement | null {
   const players = useStore((state) => {
     const game = state.games.find((game) => game.id === gameId);
     if (!game) {
@@ -95,7 +95,7 @@ type PlayerDetailsProps = {
   playerIndex: number;
 };
 
-export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.Element | null {
+export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): ReactElement | null {
   const renamePlayer = useStore((state) => state.renamePlayer);
   const removePlayer = useStore((state) => state.removePlayer);
 

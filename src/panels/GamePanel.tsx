@@ -1,10 +1,10 @@
 import { Pencil, Trash } from "@phosphor-icons/react";
-import React, { Fragment } from "react";
+import React, { Fragment, type ReactElement } from "react";
 import { Button } from "../components/Button";
 import { ListItem } from "../components/ListItem";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel } from "../libs/panels";
-import { GameSelected, playerScore, printScore, resultScore, useStore } from "../store";
+import type { Panel } from "../libs/panels";
+import { type GameSelected, playerScore, printScore, resultScore, useStore } from "../store";
 
 type Props = {
   gameId: string;
@@ -20,7 +20,7 @@ export function GamePanel(props: Props): Panel {
   };
 }
 
-export function Content({ gameId, selected }: Props): JSX.Element | null {
+export function Content({ gameId, selected }: Props): ReactElement | null {
   const game = useStore((state) => state.games.find((g) => g.id === gameId));
   const renameGame = useStore((state) => state.renameGame);
   const removeGame = useStore((state) => state.removeGame);
@@ -99,8 +99,11 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                   <div className="flex flex-col gap-1 min-h-full">
                     <div className="px-4 border border-transparent">
                       <Line
-                        values={game.players.map((p) => (
-                          <p className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden">
+                        values={game.players.map((p, i) => (
+                          <p
+                            key={i}
+                            className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden"
+                          >
                             {p.name}
                           </p>
                         ))}
@@ -116,8 +119,10 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                       >
                         <Line
                           name={`Tour n°${index + 1}`}
-                          values={round.results.map((result) => (
-                            <p className="text-right">{printScore(resultScore(result))}</p>
+                          values={round.results.map((result, i) => (
+                            <p key={i} className="text-right">
+                              {printScore(resultScore(result))}
+                            </p>
                           ))}
                         />
                       </ListItem>
@@ -126,7 +131,7 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                       <Line
                         name="Total"
                         values={game.players.map((_p, playerIndex) => (
-                          <p className="text-right font-bold">
+                          <p key={playerIndex} className="text-right font-bold">
                             {playerScore(game, playerIndex, null)}
                           </p>
                         ))}

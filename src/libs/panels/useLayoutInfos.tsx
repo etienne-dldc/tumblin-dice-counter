@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useMemo } from "react";
+// oxlint-disable react/only-export-components
+import { createContext, useContext, useMemo, type ReactElement, type ReactNode } from "react";
 
 export type PanelsInfos = {
   panelWidth: number;
@@ -14,7 +15,7 @@ export type PanelsInfosProviderProps = {
   showChildren: (() => void) | null;
   showLast: () => void;
   panelWidth: number;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function PanelsInfosProvider({
@@ -23,7 +24,7 @@ export function PanelsInfosProvider({
   showLast,
   panelWidth,
   children,
-}: PanelsInfosProviderProps): JSX.Element {
+}: PanelsInfosProviderProps): ReactElement {
   const value = useMemo(
     (): PanelsInfos => ({ showParent, showChildren, panelWidth, showLast }),
     [showParent, showChildren, showLast, panelWidth],

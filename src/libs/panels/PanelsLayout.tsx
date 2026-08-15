@@ -1,7 +1,12 @@
-import React, { useMemo, useState, useCallback, useEffect, useRef } from "react";
-import { useTransition, animated } from "react-spring";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { animated, useTransition } from "react-spring";
+import {
+  type DisplayedPanel,
+  type Panel,
+  type SolvePanelsOptions,
+  solvePanelsPages,
+} from "./Panels";
 import { PanelsInfosProvider } from "./useLayoutInfos";
-import { DisplayedPanel, Panel, SolvePanelsOptions, solvePanelsPages } from "./Panels";
 
 type Keys = {
   panelsKeys: Array<string>;
@@ -41,10 +46,11 @@ type PanelsKeys = {
   pageIndex: number;
 };
 
-const panelsKeysEqual = (l: PanelsKeys, r: PanelsKeys) =>
-  arrayShallowEqual(l.panelsKeys, r.panelsKeys) && l.pageIndex === r.pageIndex;
+const panelsKeysEqual = (l: PanelsKeys, r: PanelsKeys) => {
+  return arrayShallowEqual(l.panelsKeys, r.panelsKeys) && l.pageIndex === r.pageIndex;
+};
 
-function getIntial(currentPage: DisplayedPanel, keys: Keys, prevKeys: Keys): AnimationProperties {
+function getIntial(currentPage: DisplayedPanel, _keys: Keys, prevKeys: Keys): AnimationProperties {
   const isNew = prevKeys.panelsKeys.includes(currentPage.key) === false;
   if (isNew) {
     return {

@@ -1,7 +1,8 @@
 import { Plus } from "@phosphor-icons/react";
 import confetti from "canvas-confetti";
-import clsx from "clsx";
-import { DICES, Zone, ZoneResult, useStore } from "../store";
+import clsx from "cnfast";
+import type { ReactElement } from "react";
+import { DICES, useStore, type Zone, type ZoneResult } from "../store";
 import { tw } from "../utils/functions";
 import { Dice } from "./Dice";
 import { InlineButton } from "./InlineButton";
@@ -11,7 +12,7 @@ type DiceSelectorProps = {
   zone: Zone;
 };
 
-export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element | null {
+export function DiceSelector({ result, zone }: DiceSelectorProps): ReactElement | null {
   const setZoneResult = useStore((state) => state.setZoneResult);
 
   return (

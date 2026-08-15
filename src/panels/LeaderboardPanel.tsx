@@ -1,9 +1,9 @@
 import { Trophy } from "@phosphor-icons/react";
-import clsx from "clsx";
+import clsx from "cnfast";
 import { useMemo, useState } from "react";
 import { Chart } from "../components/Chart";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel } from "../libs/panels";
+import type { Panel } from "../libs/panels";
 import { playerScore, resultScore, useStore } from "../store";
 import { tw } from "../utils/functions";
 
@@ -44,7 +44,11 @@ function Content({ gameId }: Props) {
     }
     const playersWithScore = players
       .map((player, playerIndex) => {
-        return { player, score: playerScore(game, playerIndex, null), playerIndex };
+        return {
+          player,
+          score: playerScore(game, playerIndex, null),
+          playerIndex,
+        };
       })
       .sort((a, b) => b.score - a.score);
 

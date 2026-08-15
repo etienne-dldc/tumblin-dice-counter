@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, type ReactElement } from "react";
 import { ListItem } from "../components/ListItem";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel } from "../libs/panels";
+import type { Panel } from "../libs/panels";
 import { playerScore, printScore, resultScore, useStore } from "../store";
 
 type Props = {
@@ -18,7 +18,7 @@ export function RoundPanel(props: Props): Panel {
   };
 }
 
-export function Content({ roundIndex, gameId, playerIndex }: Props): JSX.Element | null {
+export function Content({ roundIndex, gameId, playerIndex }: Props): ReactElement | null {
   const players = useStore((state) => {
     const game = state.games.find((game) => game.id === gameId);
     if (!game) {

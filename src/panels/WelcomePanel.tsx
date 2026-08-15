@@ -1,4 +1,5 @@
-import { Panel } from "../libs/panels";
+import type { ReactElement } from "react";
+import type { Panel } from "../libs/panels";
 
 export function WelcomePanel(): Panel {
   return {
@@ -10,7 +11,7 @@ export function WelcomePanel(): Panel {
   };
 }
 
-export function Content(): JSX.Element | null {
+export function Content(): ReactElement | null {
   return (
     <div className="h-full flex flex-col items-center justify-center">
       <p>Bonjour !</p>

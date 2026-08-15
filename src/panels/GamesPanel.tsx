@@ -1,7 +1,8 @@
+import type { ReactElement } from "react";
 import { Button } from "../components/Button";
 import { ListItem } from "../components/ListItem";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel, useLayoutInfosOrThrow } from "../libs/panels";
+import { type Panel, useLayoutInfosOrThrow } from "../libs/panels";
 import { useStore } from "../store";
 
 type Props = {
@@ -16,7 +17,7 @@ export function GamesPanel(props: Props): Panel {
   };
 }
 
-export function Content({ selectedGame }: Props): JSX.Element | null {
+export function Content({ selectedGame }: Props): ReactElement | null {
   const games = useStore((state) => state.games);
   const addGame = useStore((state) => state.addGame);
   const selectHome = useStore((state) => state.selectHome);

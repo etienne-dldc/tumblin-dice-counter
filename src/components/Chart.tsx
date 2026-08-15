@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from "cnfast";
 import { Fragment, useMemo } from "react";
 import { mapNum } from "../utils/functions";
 

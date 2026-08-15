@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { Panel, Panels, PanelsLayout } from "./libs/panels";
-import { SolvePanelsOptions } from "./libs/panels/Panels";
+import { type Panel, type Panels, PanelsLayout } from "./libs/panels";
+import type { SolvePanelsOptions } from "./libs/panels/Panels";
 import { GamePanel } from "./panels/GamePanel";
 import { GamesPanel } from "./panels/GamesPanel";
 import { LeaderboardPanel } from "./panels/LeaderboardPanel";
@@ -52,7 +52,7 @@ export function App() {
               throw new Error("Unknown selected type");
             }) ?? []),
           ]
-        : [WelcomePanel({})]),
+        : [WelcomePanel()]),
     ];
     return (panels.flat(Infinity) as Array<Panel | null>).filter(
       (panel): panel is Panel => panel !== null,

@@ -1,5 +1,5 @@
-import clsx from "clsx";
-import React from "react";
+import clsx from "cnfast";
+import type { ReactElement } from "react";
 import { tw } from "../utils/functions";
 
 const colors = {
@@ -23,7 +23,7 @@ export function InlineButton({
   children,
   onClick,
   small = false,
-}: InlineButtonProps): JSX.Element | null {
+}: InlineButtonProps): ReactElement | null {
   return (
     <button
       className={clsx(

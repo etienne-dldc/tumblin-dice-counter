@@ -1,21 +1,21 @@
 import { Trash } from "@phosphor-icons/react";
-import clsx from "clsx";
-import React from "react";
+import clsx from "cnfast";
+import { type ReactElement, useState } from "react";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { Dice } from "../components/Dice";
 import { DiceSelector } from "../components/DiceSelector";
 import { PanelHeader } from "../components/PanelHeader";
-import { Panel } from "../libs/panels";
+import type { Panel } from "../libs/panels";
 import {
-  TDiceValue,
-  ZONES,
-  Zone,
-  ZoneResult,
   diceByValue,
   printScore,
   resultScore,
+  type TDiceValue,
   useStore,
+  type Zone,
   zoneName,
+  type ZoneResult,
+  ZONES,
   zoneScore,
 } from "../store";
 import { tw } from "../utils/functions";
@@ -40,7 +40,7 @@ export function Content({
   gameId,
   playerIndex,
   selectedZone,
-}: Props): JSX.Element | null {
+}: Props): ReactElement | null {
   const user = useStore((state) => {
     const game = state.games.find((game) => game.id === gameId);
     if (!game) {
@@ -96,10 +96,13 @@ type ZoneItemProps = {
 
 const colors = {
   red: { base: tw`border-red-200`, active: tw`bg-red-200 border-red-600` },
-  green: { base: tw`border-green-200`, active: tw`bg-green-200 border-green-600` },
+  green: {
+    base: tw`border-green-200`,
+    active: tw`bg-green-200 border-green-600`,
+  },
 } as const;
 
-export function ZoneItem({ active, zone, result }: ZoneItemProps): JSX.Element | null {
+export function ZoneItem({ active, zone, result }: ZoneItemProps): ReactElement | null {
   const selectZone = useStore((state) => state.selectZone);
 
   const color = zone === "malus" ? "red" : "green";
@@ -143,8 +146,8 @@ type DiceItemProps = {
   dice: TDiceValue;
 };
 
-function DiceItem({ result, zone, index, dice }: DiceItemProps): JSX.Element | null {
-  const [deleting, setDeleting] = React.useState(false);
+function DiceItem({ result, zone, index, dice }: DiceItemProps): ReactElement | null {
+  const [deleting, setDeleting] = useState(false);
 
   const setZoneResult = useStore((state) => state.setZoneResult);
   const ref = useOnclickOutside(() => {
