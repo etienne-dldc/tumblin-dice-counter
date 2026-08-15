@@ -23,7 +23,7 @@ export function Chart({ data, selected }: ChartProps) {
   }, [data]);
 
   return (
-    <div className="aspect-[1000/500] bg-gray-100 rounded-md border border-gray-300">
+    <div className="aspect-1000/500 bg-gray-100 rounded-md border border-gray-300">
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
         <g transform={`translate(${PADDING}, ${PADDING})`}>
           {/* Graph */}
@@ -89,7 +89,7 @@ function PlayerLine({ line, dimmed, maxScore, selected = false }: PlayerLineProp
           d={path}
           className={clsx(
             "fill-none",
-            selected ? "stroke-[3]" : "stroke-2",
+            selected ? "stroke-3" : "stroke-2",
             dimmed ? "stroke-gray-400" : "stroke-gray-700",
           )}
         />

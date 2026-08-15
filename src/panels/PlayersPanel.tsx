@@ -75,7 +75,7 @@ export function Content({ gameId }: Props): JSX.Element | null {
               {otherPlayers.map((playerName, index) => (
                 <div
                   key={index}
-                  className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-200 rounded cursor-pointer"
+                  className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-200 rounded-sm cursor-pointer"
                   onClick={() => addPlayer(playerName)}
                 >
                   <Plus className="w-5 h-5 text-teal-600" weight="bold" />
@@ -100,9 +100,9 @@ export function PlayerDetails({ player, playerIndex }: PlayerDetailsProps): JSX.
   const removePlayer = useStore((state) => state.removePlayer);
 
   return (
-    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-400 rounded">
+    <div className="flex flex-row items-center space-x-2 bg-teal-50 p-2 border border-teal-400 rounded-sm">
       <span className="flex-1 text-lg pl-2">{player.name}</span>
-      <div className="flex flex-row items-center rounded overflow-hidden space-x-2">
+      <div className="flex flex-row items-center rounded-sm overflow-hidden space-x-2">
         <button
           className="text-blue-500 rounded-md bg-blue-100 border-2 border-blue-200 p-1 hover:bg-blue-600 hover:text-white hover:border-blue-700"
           onClick={() => {
