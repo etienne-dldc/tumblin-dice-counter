@@ -32,8 +32,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check if version tag already exists
+        id: check-tag
+        run: |
+          if docker manifest inspect "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.pkg.outputs.version }}" > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Extract Docker metadata
         id: meta
+        if: steps.check-tag.outputs.exists == 'false'
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -42,9 +52,11 @@ jobs:
             type=raw,value=latest
 
       - name: Set up Docker Buildx
+        if: steps.check-tag.outputs.exists == 'false'
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image
+        if: steps.check-tag.outputs.exists == 'false'
         uses: docker/build-push-action@v6
         with:
           context: .
