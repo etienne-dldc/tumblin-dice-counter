@@ -25,7 +25,10 @@ export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element |
               onClick={(event) => {
                 if (zone === "x4") {
                   confetti({
-                    origin: { x: event.clientX / window.innerWidth, y: event.clientY / window.innerHeight },
+                    origin: {
+                      x: event.clientX / window.innerWidth,
+                      y: event.clientY / window.innerHeight,
+                    },
                     colors: ["#22c55e", "#16a34a", "#15803d"],
                     startVelocity: 5,
                     decay: 0.95,
@@ -44,13 +47,15 @@ export function DiceSelector({ result, zone }: DiceSelectorProps): JSX.Element |
                   "h-14 w-14",
                   zone === "malus"
                     ? tw`text-red-500 group-hover:text-red-600`
-                    : tw`text-green-500 group-hover:text-green-600`
+                    : tw`text-green-500 group-hover:text-green-600`,
                 )}
               />
               <div
                 className={clsx(
                   "absolute top-1/2 -translate-y-1/2 -left-0.5 p-0.5 flex items-center justify-center rounded-full",
-                  zone === "malus" ? tw`bg-red-500 group-hover:bg-red-600` : tw`bg-green-500 group-hover:bg-green-600`
+                  zone === "malus"
+                    ? tw`bg-red-500 group-hover:bg-red-600`
+                    : tw`bg-green-500 group-hover:bg-green-600`,
                 )}
               >
                 <Plus className={clsx("w-4 h-4 text-white")} weight="bold" />

@@ -111,8 +111,8 @@ function Content({ gameId }: Props) {
                   isSelected
                     ? positionStyles.selected
                     : selected === null
-                    ? positionStyles.base
-                    : positionStyles.unselected
+                      ? positionStyles.base
+                      : positionStyles.unselected,
                 )}
                 onClick={() => setSelected((p) => (p === playerIndex ? null : playerIndex))}
               >

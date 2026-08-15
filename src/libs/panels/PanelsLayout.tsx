@@ -10,7 +10,10 @@ type Keys = {
 };
 
 const keysEqual = (left: Keys, right: Keys) => {
-  return arrayShallowEqual(left.pageKeys, right.pageKeys) && arrayShallowEqual(left.panelsKeys, right.panelsKeys);
+  return (
+    arrayShallowEqual(left.pageKeys, right.pageKeys) &&
+    arrayShallowEqual(left.panelsKeys, right.panelsKeys)
+  );
 };
 
 type AnimationProperties = {
@@ -103,7 +106,7 @@ export function PanelsLayout({ panels, options }: Props): React.ReactElement | n
 
   const panelsKeys = useMemo(
     (): PanelsKeys => ({ panelsKeys: panels.map((p) => p.key), pageIndex }),
-    [pageIndex, panels]
+    [pageIndex, panels],
   );
   const prevPanelsKeys = usePrevious(panelsKeys, panelsKeysEqual);
 
@@ -128,7 +131,7 @@ export function PanelsLayout({ panels, options }: Props): React.ReactElement | n
       pageKeys: page.map((p) => p.key),
       page,
     }),
-    [page, panels]
+    [page, panels],
   );
 
   const prevKeys = usePrevious(keys, keysEqual);

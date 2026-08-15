@@ -30,7 +30,7 @@ export function InlineButton({
         small ? tw`text-xs px-2 py-1` : tw`text-sm px-3 py-2.5`,
         tw`tracking-wide font-semibold uppercase text-black hover:text-white`,
         className,
-        colors[color]
+        colors[color],
       )}
       onClick={onClick}
     >

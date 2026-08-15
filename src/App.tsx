@@ -54,14 +54,16 @@ export function App() {
           ]
         : [WelcomePanel({})]),
     ];
-    return (panels.flat(Infinity) as Array<Panel | null>).filter((panel): panel is Panel => panel !== null);
+    return (panels.flat(Infinity) as Array<Panel | null>).filter(
+      (panel): panel is Panel => panel !== null,
+    );
   }, [selected]);
 
   const options = useMemo(
     (): SolvePanelsOptions => ({
       space: 10,
     }),
-    []
+    [],
   );
 
   return <PanelsLayout panels={panels} options={options} />;

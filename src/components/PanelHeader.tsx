@@ -32,7 +32,10 @@ export function PanelHeader({ title, color = "indigo", onHeaderClick }: Props): 
       {hasSides && (
         <div className="w-8 h-8 flex items-center justify-center">
           {onBack && (
-            <button onClick={onBack} className="border-0 flex items-center justify-center w-8 h-8 p-0">
+            <button
+              onClick={onBack}
+              className="border-0 flex items-center justify-center w-8 h-8 p-0"
+            >
               <CaretLeft className={clsx("w-8 h-8", colors[color].icon)} weight="bold" />
             </button>
           )}
@@ -44,7 +47,10 @@ export function PanelHeader({ title, color = "indigo", onHeaderClick }: Props): 
       {hasSides && (
         <div className="w-8 h-8 flex items-center justify-center">
           {onNext && (
-            <button onClick={onNext} className="border-0 flex items-center justify-center w-8 h-8 p-0">
+            <button
+              onClick={onNext}
+              className="border-0 flex items-center justify-center w-8 h-8 p-0"
+            >
               <CaretRight className={clsx("w-8 h-8", colors[color].icon)} weight="bold" />
             </button>
           )}

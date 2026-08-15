@@ -121,7 +121,11 @@ export function printScore(score: number): string {
   return score > 0 ? "+" + score : score.toFixed(0);
 }
 
-export function playerScore(game: Game, playerIndex: number, lastRoundIndex: number | null): number {
+export function playerScore(
+  game: Game,
+  playerIndex: number,
+  lastRoundIndex: number | null,
+): number {
   const roundIndex = lastRoundIndex ?? game.rounds.length - 1;
   let sum = 0;
   for (let i = 0; i <= roundIndex; i++) {
@@ -158,7 +162,9 @@ function findPlayer(playerIndex: number, ifPlayer: ValueFn<Player>): StateFn {
   });
 }
 
-function selectedRound(ifRound: (round: Round, selected: RoundSelected, state: State) => void): StateFn {
+function selectedRound(
+  ifRound: (round: Round, selected: RoundSelected, state: State) => void,
+): StateFn {
   return selectedGame((game, state) => {
     if (state.selected?.selected?.type !== "round") {
       return;
@@ -209,10 +215,12 @@ export const useStore = create<State>()(
               game.rounds.forEach((round) => {
                 round.results.push({ malus: [], x1: [], x2: [], x3: [], x4: [] });
               });
-            })
+            }),
           ),
-        renamePlayer: (playerIndex, name) => set(findPlayer(playerIndex, (player) => void (player.name = name))),
-        setPlayerColor: (playerIndex, color) => set(findPlayer(playerIndex, (player) => void (player.color = color))),
+        renamePlayer: (playerIndex, name) =>
+          set(findPlayer(playerIndex, (player) => void (player.name = name))),
+        setPlayerColor: (playerIndex, color) =>
+          set(findPlayer(playerIndex, (player) => void (player.color = color))),
         removePlayer: (playerIndex) =>
           set(
             selectedGame((game) => {
@@ -220,16 +228,22 @@ export const useStore = create<State>()(
               game.rounds.forEach((round) => {
                 round.results.splice(playerIndex, 1);
               });
-            })
+            }),
           ),
         addRound: () =>
           set(
             selectedGame((game, state) => {
-              game.rounds.push({ results: game.players.map(() => ({ malus: [], x1: [], x2: [], x3: [], x4: [] })) });
+              game.rounds.push({
+                results: game.players.map(() => ({ malus: [], x1: [], x2: [], x3: [], x4: [] })),
+              });
               if (state.selected) {
-                state.selected.selected = { type: "round", roundIndex: game.rounds.length - 1, selectedPlayer: null };
+                state.selected.selected = {
+                  type: "round",
+                  roundIndex: game.rounds.length - 1,
+                  selectedPlayer: null,
+                };
               }
-            })
+            }),
           ),
         removeRound: () =>
           set(
@@ -240,7 +254,7 @@ export const useStore = create<State>()(
               const roundIndex = state.selected.selected.roundIndex;
               game.rounds.splice(roundIndex, 1);
               state.selected.selected.roundIndex = game.rounds.length - 1;
-            })
+            }),
           ),
         setZoneResult: (zone, result) =>
           set(
@@ -253,7 +267,7 @@ export const useStore = create<State>()(
                 return;
               }
               playerResult[zone] = result;
-            })
+            }),
           ),
 
         selected: null,
@@ -302,7 +316,7 @@ export const useStore = create<State>()(
             }
           }),
       }),
-      { name: "TUMBLIN_DICE_V1" }
-    )
-  )
+      { name: "TUMBLIN_DICE_V1" },
+    ),
+  ),
 );

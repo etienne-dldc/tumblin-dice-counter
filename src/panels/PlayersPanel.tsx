@@ -49,7 +49,9 @@ export function Content({ gameId }: Props): JSX.Element | null {
           {players.length === 0 ? (
             <p className="py-4 text-center bg-gray-100 rounded-md">Aucun joueurs</p>
           ) : (
-            players.map((player, index) => <PlayerDetails key={index} player={player} playerIndex={index} />)
+            players.map((player, index) => (
+              <PlayerDetails key={index} player={player} playerIndex={index} />
+            ))
           )}
         </div>
         <Button
@@ -66,7 +68,9 @@ export function Content({ gameId }: Props): JSX.Element | null {
         </Button>
         {otherPlayers.length > 0 && (
           <Fragment>
-            <h3 className="text-sm uppercase tracking-wide font-semibold px-1">Joueurs des parties précédantes</h3>
+            <h3 className="text-sm uppercase tracking-wide font-semibold px-1">
+              Joueurs des parties précédantes
+            </h3>
             <div className="flex flex-col gap-2">
               {otherPlayers.map((playerName, index) => (
                 <div

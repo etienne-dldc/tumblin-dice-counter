@@ -19,7 +19,13 @@ type ListItemProps = {
   onClick?: () => void;
 };
 
-export function ListItem({ color, active, children, className, onClick }: ListItemProps): JSX.Element | null {
+export function ListItem({
+  color,
+  active,
+  children,
+  className,
+  onClick,
+}: ListItemProps): JSX.Element | null {
   return (
     <button
       onClick={onClick}
@@ -27,7 +33,7 @@ export function ListItem({ color, active, children, className, onClick }: ListIt
         "flex p-2 px-4 rounded-md border",
         className,
         active ? colors[color].active : colors[color].base,
-        active && "font-bold"
+        active && "font-bold",
       )}
     >
       {children}

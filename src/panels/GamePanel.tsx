@@ -74,14 +74,19 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
           {game.players.length === 0
             ? "Ajouter des joueurs"
             : game.players.length === 1
-            ? "1 joueur"
-            : `${game.players.length} joueurs`}
+              ? "1 joueur"
+              : `${game.players.length} joueurs`}
         </ListItem>
         {game.players.length === 0 ? (
           <p className="py-4 text-center bg-gray-100 rounded-md">Aucun joueurs</p>
         ) : (
           <Fragment>
-            <ListItem active={leaderboardActive} color="pink" className="" onClick={selectLeaderboard}>
+            <ListItem
+              active={leaderboardActive}
+              color="pink"
+              className=""
+              onClick={selectLeaderboard}
+            >
               Classement
             </ListItem>
             <div className="flex flex-col items-stretch gap-2">
@@ -95,7 +100,9 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                     <div className="px-4 border border-transparent">
                       <Line
                         values={game.players.map((p) => (
-                          <p className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden">{p.name}</p>
+                          <p className="text-right text-ellipsis w-32 whitespace-nowrap overflow-hidden">
+                            {p.name}
+                          </p>
                         ))}
                       />
                     </div>
@@ -119,7 +126,9 @@ export function Content({ gameId, selected }: Props): JSX.Element | null {
                       <Line
                         name="Total"
                         values={game.players.map((_p, playerIndex) => (
-                          <p className="text-right font-bold">{playerScore(game, playerIndex, null)}</p>
+                          <p className="text-right font-bold">
+                            {playerScore(game, playerIndex, null)}
+                          </p>
                         ))}
                       />
                     </div>

@@ -26,13 +26,9 @@ export function PanelsInfosProvider({
 }: PanelsInfosProviderProps): JSX.Element {
   const value = useMemo(
     (): PanelsInfos => ({ showParent, showChildren, panelWidth, showLast }),
-    [showParent, showChildren, showLast, panelWidth]
+    [showParent, showChildren, showLast, panelWidth],
   );
-  return (
-    <PanelsInfosContext.Provider value={value}>
-      {children}
-    </PanelsInfosContext.Provider>
-  );
+  return <PanelsInfosContext.Provider value={value}>{children}</PanelsInfosContext.Provider>;
 }
 
 export function useMaybePanelsInfos(): PanelsInfos | null {

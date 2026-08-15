@@ -35,7 +35,12 @@ export function PlayerPanel(props: Props): Panel {
   };
 }
 
-export function Content({ roundIndex, gameId, playerIndex, selectedZone }: Props): JSX.Element | null {
+export function Content({
+  roundIndex,
+  gameId,
+  playerIndex,
+  selectedZone,
+}: Props): JSX.Element | null {
   const user = useStore((state) => {
     const game = state.games.find((game) => game.id === gameId);
     if (!game) {
@@ -67,13 +72,18 @@ export function Content({ roundIndex, gameId, playerIndex, selectedZone }: Props
 
   return (
     <div className="h-full flex flex-col items-stretch gap-4 pb-4">
-      <PanelHeader color="red" title={`Tour n°${roundIndex + 1} - ${user.name} (${printScore(resultScore(result))})`} />
+      <PanelHeader
+        color="red"
+        title={`Tour n°${roundIndex + 1} - ${user.name} (${printScore(resultScore(result))})`}
+      />
       <div className="flex flex-col items-stretch gap-2 flex-1 overflow-y-auto pb-2">
         {ZONES.map((zone) => (
           <ZoneItem key={zone} zone={zone} result={result[zone]} active={selectedZone === zone} />
         ))}
       </div>
-      {selectedResult && selectedZone && <DiceSelector result={selectedResult} zone={selectedZone} />}
+      {selectedResult && selectedZone && (
+        <DiceSelector result={selectedResult} zone={selectedZone} />
+      )}
     </div>
   );
 }
@@ -99,7 +109,7 @@ export function ZoneItem({ active, zone, result }: ZoneItemProps): JSX.Element |
       className={clsx(
         "flex p-2 rounded-md border flex-row items-stretch gap-2 px-2",
         active ? colors[color].active : colors[color].base,
-        active && "font-bold"
+        active && "font-bold",
       )}
       onClick={() => selectZone(zone)}
     >
@@ -118,7 +128,9 @@ export function ZoneItem({ active, zone, result }: ZoneItemProps): JSX.Element |
         </div>
       )}
       <div className="flex w-10 flex-row items-center justify-end pr-2">
-        {result.length > 0 && <span className="font-bold">{printScore(zoneScore(zone, result))}</span>}
+        {result.length > 0 && (
+          <span className="font-bold">{printScore(zoneScore(zone, result))}</span>
+        )}
       </div>
     </div>
   );
@@ -158,14 +170,18 @@ function DiceItem({ result, zone, index, dice }: DiceItemProps): JSX.Element | n
     >
       <Dice
         dice={diceByValue(dice)}
-        className={clsx("h-12 w-12", zone === "malus" ? "text-red-600" : "text-green-600", deleting && "opacity-50")}
+        className={clsx(
+          "h-12 w-12",
+          zone === "malus" ? "text-red-600" : "text-green-600",
+          deleting && "opacity-50",
+        )}
       />
       {deleting && (
         <Trash
           weight="bold"
           className={clsx(
             "absolute left-[50%] top-[50%] -translate-y-1/2 -translate-x-1/2 h-7 w-7",
-            zone === "malus" ? "text-red-800" : "text-green-800"
+            zone === "malus" ? "text-red-800" : "text-green-800",
           )}
         />
       )}

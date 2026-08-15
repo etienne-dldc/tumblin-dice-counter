@@ -1,4 +1,6 @@
 {
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "denoland.vscode-deno",
   "tailwindCSS.experimental.classRegex": [
     "tw`([^`]*)" // tw`...`
   ],
@@ -6,7 +8,6 @@
     "typescript": "javascript",
     "typescriptreact": "javascript"
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   }

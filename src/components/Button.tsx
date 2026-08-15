@@ -18,13 +18,18 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-export function Button({ color = "indigo", className, children, onClick }: ButtonProps): JSX.Element | null {
+export function Button({
+  color = "indigo",
+  className,
+  children,
+  onClick,
+}: ButtonProps): JSX.Element | null {
   return (
     <button
       className={clsx(
         `px-4 py-2 rounded-md tracking-wide font-semibold text-sm uppercase shadow-lg text-white border-2`,
         className,
-        colors[color]
+        colors[color],
       )}
       onClick={onClick}
     >

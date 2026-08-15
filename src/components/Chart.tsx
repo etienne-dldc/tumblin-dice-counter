@@ -33,9 +33,18 @@ export function Chart({ data, selected }: ChartProps) {
               if (selected === index) {
                 return null;
               }
-              return <PlayerLine maxScore={maxScore} line={line} key={index} dimmed={selected !== null} />;
+              return (
+                <PlayerLine
+                  maxScore={maxScore}
+                  line={line}
+                  key={index}
+                  dimmed={selected !== null}
+                />
+              );
             })}
-            {selected !== null && <PlayerLine selected maxScore={maxScore} line={data[selected]} dimmed={false} />}
+            {selected !== null && (
+              <PlayerLine selected maxScore={maxScore} line={data[selected]} dimmed={false} />
+            )}
           </g>
           {/* Legend */}
         </g>
@@ -81,13 +90,21 @@ function PlayerLine({ line, dimmed, maxScore, selected = false }: PlayerLineProp
           className={clsx(
             "fill-none",
             selected ? "stroke-[3]" : "stroke-2",
-            dimmed ? "stroke-gray-400" : "stroke-gray-700"
+            dimmed ? "stroke-gray-400" : "stroke-gray-700",
           )}
         />
       )}
       {!dimmed &&
         points.map((p, i) => {
-          return <circle key={i} cx={p.x} cy={p.y} r={4} className="fill-gray-400 stroke-1 stroke-gray-900" />;
+          return (
+            <circle
+              key={i}
+              cx={p.x}
+              cy={p.y}
+              r={4}
+              className="fill-gray-400 stroke-1 stroke-gray-900"
+            />
+          );
         })}
     </g>
   );
@@ -106,7 +123,9 @@ function Grid({ maxScore, rounds }: GridProps) {
     <Fragment>
       {Array.from({ length: rounds }).map((_, i) => {
         const x = (GRAPH_WIDTH / (rounds - 1)) * i;
-        return <line key={`v-${i}`} x1={x} y1={0} x2={x} y2={GRAPH_HEIGHT} className="stroke-gray-300" />;
+        return (
+          <line key={`v-${i}`} x1={x} y1={0} x2={x} y2={GRAPH_HEIGHT} className="stroke-gray-300" />
+        );
       })}
       {Array.from({ length: hLinesCount }).map((_, i) => {
         const y = GRAPH_HEIGHT - i * 100 * ratio;

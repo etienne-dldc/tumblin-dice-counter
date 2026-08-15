@@ -30,25 +30,23 @@ export type Spacing = {
 export function solvePanelsPages(
   panels: Array<Panel>,
   width: number,
-  options: SolvePanelsOptions = {}
+  options: SolvePanelsOptions = {},
 ): Array<Array<DisplayedPanel>> {
   const spacing: Spacing = {
     spaceBetween: options.spaceBetween ?? options.space ?? 0,
     spaceAround: options.spaceAround ?? options.space ?? 0,
   };
   // init panels data
-  const panelsFull = panels.map(
-    (panel): DisplayedPanel => ({
-      content: panel.content,
-      key: panel.key,
-      width: panel.width,
-      flex: panel.flex ?? 0,
-      optional: panel.optional ?? false,
-      canShowChildren: false,
-      canShowParent: false,
-      left: 0,
-    })
-  );
+  const panelsFull = panels.map((panel): DisplayedPanel => ({
+    content: panel.content,
+    key: panel.key,
+    width: panel.width,
+    flex: panel.flex ?? 0,
+    optional: panel.optional ?? false,
+    canShowChildren: false,
+    canShowParent: false,
+    left: 0,
+  }));
   // Find the last pageIndex,
   // If we there are 5 items and we can swhow the last 3
   // then maxFirstPanelIndex is 2
@@ -56,13 +54,19 @@ export function solvePanelsPages(
   // this means that valid pages are [0, 1, 2]
   const pagesIndexes = Array.from(Array(maxFirstPanelIndex + 1).keys());
   // Now we need to find for each pageIndex which panels are displayed
-  const pages = pagesIndexes.map((firstIndex) => solvePanelsPage(panelsFull, firstIndex, width, spacing));
+  const pages = pagesIndexes.map((firstIndex) =>
+    solvePanelsPage(panelsFull, firstIndex, width, spacing),
+  );
   // If page can backfill then it return null and we discard it
   const filtered = pages.filter((p): p is Array<DisplayedPanel> => p !== null);
   return filtered;
 }
 
-function solveMaxFirstPanelIndex(panels: Array<DisplayedPanel>, width: number, spacing: Spacing): number {
+function solveMaxFirstPanelIndex(
+  panels: Array<DisplayedPanel>,
+  width: number,
+  spacing: Spacing,
+): number {
   // Fill in reverse order to find how many items we can display
   const { queue } = fillPanels([], [...panels].reverse(), width, spacing);
   if (queue.length === 0) {
@@ -76,7 +80,7 @@ function solvePanelsPage(
   panels: Array<DisplayedPanel>,
   firstIndex: number,
   width: number,
-  spacing: Spacing
+  spacing: Spacing,
 ): Array<DisplayedPanel> | null {
   const filled = fillPanels([], panels.slice(firstIndex), width, spacing);
   const displayed = filled.displayed.map((p) => Object.assign({}, p));
@@ -138,7 +142,7 @@ function fillPanels<P extends Panel>(
   currentPanels: Array<P>,
   panels: Array<P>,
   width: number,
-  spacing: Spacing
+  spacing: Spacing,
 ): { displayed: Array<P>; queue: Array<P> } {
   const displayedPanels: Array<P> = [...currentPanels];
   let queue = [...panels];
