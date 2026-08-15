@@ -156,7 +156,7 @@ type LineProps = {
   values: Array<React.ReactElement>;
 };
 
-function Line({ name, values }: LineProps): JSX.Element {
+function Line({ name, values }: LineProps): ReactElement {
   return (
     <div className="flex flex-row items-center text-left tracking-normal space-x-4">
       <div className="w-24 shrink-0">
